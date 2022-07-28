@@ -1,6 +1,7 @@
 import React, { FC, useReducer } from 'react';
 import './index.css';
 import componentList from "../../custom-component/component-list"
+import Control from "./Control";
 
 var id = 0;
 
@@ -37,6 +38,9 @@ const AppLayoutMain: FC = () => {
 
     return (
         <div style={{ position: "relative" }} className="AppLayoutMain" onDrop={myDrop} onDragOver={myDragOver}>
+            <Control>
+                <div>123</div>
+            </Control>
             {state.componentData.map((item: any) => {
                 return <div style={{ ...item.style, position: "absolute" }} key={item.id}>{item.component()}</div>
             })}

@@ -1,0 +1,65 @@
+.Control {
+    position: absolute;
+    background-color: #ddd;
+}
+
+.Control>.moveComponent {
+    float: left;
+    position: relative;
+    width: 100%;
+    height: 100%;
+    outline: solid 1px #40a9ff;
+}
+
+.Control>.moveComponent>.circle {
+    position: absolute;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background-color: #40a9ff;
+}
+
+
+/* e-resize 	此光标指示矩形框的边缘可被向右（东）移动。
+ne-resize 	此光标指示矩形框的边缘可被向上及向右移动（北/东）。
+nw-resize 	此光标指示矩形框的边缘可被向上及向左移动（北/西）。
+n-resize 	此光标指示矩形框的边缘可被向上（北）移动。
+se-resize 	此光标指示矩形框的边缘可被向下及向右移动（南/东）。
+sw-resize 	此光标指示矩形框的边缘可被向下及向左移动（南/西）。
+s-resize 	此光标指示矩形框的边缘可被向下移动（南）。
+w-resize 	此光标指示矩形框的边缘可被向左移动（西）。 */
+
+/* "t","r","b","l","lt","rt","rb","lb" */
+
+
+.Control>.moveComponent>.circle.t {
+    cursor: n-resize;
+}
+
+.Control>.moveComponent>.circle.r {
+    cursor: e-resize;
+}
+
+.Control>.moveComponent>.circle.b {
+    cursor: s-resize;
+}
+
+.Control>.moveComponent>.circle.l {
+    cursor: w-resize;
+}
+
+.Control>.moveComponent>.circle.lt {
+    cursor: nw-resize;
+}
+
+.Control>.moveComponent>.circle.rt {
+    cursor: ne-resize;
+}
+
+.Control>.moveComponent>.circle.rb {
+    cursor: se-resize;
+}
+
+.Control>.moveComponent>.circle.lb {
+    cursor: sw-resize;
+}
