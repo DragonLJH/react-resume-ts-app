@@ -9,8 +9,10 @@ interface ControlProps {
 }
 
 const Control: FC<ControlProps> = (props: ControlProps) => {
-    const { children } = props;
-    const [style, setStyle] = useState({
+    /*-------------------------------------节点控制组件放大缩小以及整体移动------------------------------------------*/
+
+    const { children, style } = props;
+    const [controlstyle, setControlStyle] = useState({
         top: 0,
         left: 0,
         width: 0,
@@ -18,34 +20,30 @@ const Control: FC<ControlProps> = (props: ControlProps) => {
     })
 
     useEffect(() => {
-        setStyle({
-            top: 100,
-            left: 100,
-            width: 100,
-            height: 100,
-        })
+        let { top, left, width, height } = style
+        setControlStyle({ top, left, width, height })
     }, [])
 
     const circleWc = 3  //circle宽高6px ，误差3px
     let moveList = [  //8个点控制组件大小
-        { circleName: "t", style: { top: 0 - circleWc, left: style.width / 2, } },
-        { circleName: "r", style: { top: style.height / 2, left: style.width - circleWc, } },
-        { circleName: "b", style: { top: style.height - circleWc, left: style.width / 2, } },
-        { circleName: "l", style: { top: style.height / 2, left: 0 - circleWc, } },
+        { circleName: "t", style: { top: 0 - circleWc, left: controlstyle.width / 2, } },
+        { circleName: "r", style: { top: controlstyle.height / 2, left: controlstyle.width - circleWc, } },
+        { circleName: "b", style: { top: controlstyle.height - circleWc, left: controlstyle.width / 2, } },
+        { circleName: "l", style: { top: controlstyle.height / 2, left: 0 - circleWc, } },
         { circleName: "lt", style: { top: 0 - circleWc, left: 0 - circleWc, } },
-        { circleName: "rt", style: { top: 0 - circleWc, left: style.width - circleWc, } },
-        { circleName: "rb", style: { top: style.height - circleWc, left: style.width - circleWc, } },
-        { circleName: "lb", style: { top: style.height - circleWc, left: 0 - circleWc, } },
+        { circleName: "rt", style: { top: 0 - circleWc, left: controlstyle.width - circleWc, } },
+        { circleName: "rb", style: { top: controlstyle.height - circleWc, left: controlstyle.width - circleWc, } },
+        { circleName: "lb", style: { top: controlstyle.height - circleWc, left: 0 - circleWc, } },
     ]
 
 
-    const relocation = (e: any, name: string) => {
+    const relocation = (e: any, name: string = "acquiesce") => {  // name（默认值：acquiesce（默许））不传值默认为整体移动
 
         e.stopPropagation();
         e.preventDefault();
 
-        const switchSet = (x: number, y: number) => { // 根据节点（8个控制节点）控制组件的大小 （宽高）（放大缩小）
-            let { top, left, width, height } = style
+        const switchSet = (x: number, y: number) => { // 根据 name 节点（8个控制节点）控制组件的大小 （宽高）（放大缩小）
+            let { top, left, width, height } = controlstyle
             if (name.indexOf("t") !== -1) {
                 top += y
                 height -= y
@@ -60,8 +58,12 @@ const Control: FC<ControlProps> = (props: ControlProps) => {
                 left += x
                 width -= x
             }
-            if (width > 10 || height > 10) {  //当宽度高度小于10的时候停止缩小
-                setStyle({ top, left, width, height })
+            if (name === "acquiesce") {
+                top += y
+                left += x
+            }
+            if (width > 10 && height > 10 && top >= 0 && left >= 0) {  //当宽度高度小于10的时候停止缩小,当 x y 坐标小于0时停止移动
+                setControlStyle({ top, left, width, height })
             }
         }
 
@@ -88,7 +90,7 @@ const Control: FC<ControlProps> = (props: ControlProps) => {
 
 
     return (
-        <div className="Control" style={getStyle({ ...style })} >
+        <div className="Control" style={getStyle({ ...controlstyle })} onMouseDown={relocation}>
             <div className="moveComponent">
                 {children}
                 {moveList.map((val) => {

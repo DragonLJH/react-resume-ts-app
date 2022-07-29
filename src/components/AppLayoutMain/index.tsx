@@ -1,7 +1,8 @@
-import React, { FC, useReducer } from 'react';
+import { FC, useContext } from 'react';
 import './index.css';
 import componentList from "../../custom-component/component-list"
 import Control from "./Control";
+import commonContext from "../../commonContext";
 import { HEADER_Y, SIDER_LEFT_X } from "../../utils";
 
 var id = 0;
@@ -12,39 +13,53 @@ function getID() {
 
 
 const AppLayoutMain: FC = () => {
-    const initialState = { componentData: [] };
+    /*-----------------------------------拖拽添加组件-------------------------------------------*/
+    //状态管理，在App.tsx管理调用
+    const myAuth: any = useContext(commonContext);
 
-    const reducer = (prevState: any, action: any) => {
-        switch (action.type) {
-            case 'increment':
-                const { data } = action
-                return { componentData: [...prevState.componentData, data] };
-            default:
-                throw new Error();
-        }
-    }
-    const [state, dispatch] = useReducer(reducer, initialState);
-    const myDrop = (e: any) => {
-        let index = e.dataTransfer.getData("index");
-        let componentItem = componentList[index]
-        let { clientX, clientY }: { clientX: number, clientY: number } = e
-        componentItem.style = { ...componentItem.style, left: clientX - SIDER_LEFT_X, top: clientY - HEADER_Y }
-        dispatch({ type: 'increment', data: { ...componentItem, id: "component" + getID() } })
+    // const initialState = { componentData: [], selectComponent: {}, selectComponentIndex: "", };
+    // const reducer = (prevState: any, action: any) => {
+    //     let { data } = action
+
+    //     switch (action.type) {
+    //         case 'increment':
+    //             return { ...prevState, componentData: [...prevState.componentData, data] };
+
+    //         case 'change-select':
+    //             return { ...prevState, selectComponent: data, selectComponentIndex: data.id };
+    //         default:
+    //             throw new Error();
+    //     }
+    // }
+    // const [state, dispatch] = useReducer(reducer, initialState);
+
+    const useMyDrop = (e: any) => {  // 拖拽事件 
+        let index = e.dataTransfer.getData("index"); // 获取拖拽组件的id
+        let componentItem = componentList[index]     // 获取拖拽组件
+        let { clientX, clientY }: { clientX: number, clientY: number } = e  // 获取落点的 x y（clientX，clientY） 坐标
+        componentItem.style = { ...componentItem.style, left: clientX - SIDER_LEFT_X, top: clientY - HEADER_Y }  // 给组件添加 x y（clientX，clientY） 坐标
+        // dispatch({ type: 'increment', data: { ...componentItem, id: "component" + getID() } })  // 添加组件
+        myAuth.increment({ ...componentItem, id: "component" + getID() })
         e.preventDefault();
         e.stopPropagation();
     }
-    const myDragOver = (e: any) => {
+
+    const myDragOver = (e: any) => {  // 让拖拽事件获取落点的 x y（clientX，clientY） 坐标
+
         e.preventDefault();
         e.stopPropagation();
+
     }
+
+    /*------------------------------------------------------------------------------*/
+
+
+
 
     return (
-        <div style={{ position: "relative" }} className="AppLayoutMain" onDrop={myDrop} onDragOver={myDragOver}>
-            <Control>
-                <div>123</div>
-            </Control>
-            {state.componentData.map((item: any) => {
-                return <div style={{ ...item.style, position: "absolute" }} key={item.id}>{item.component()}</div>
+        <div className="AppLayoutMain" onDrop={useMyDrop} onDragOver={myDragOver}>
+            {myAuth.state.componentData.map((item: any) => {
+                return <Control style={{ ...item.style }} key={item.id}>{item.component()}</Control>
             })}
         </div>
     )
