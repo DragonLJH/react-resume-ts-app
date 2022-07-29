@@ -1,4 +1,7 @@
 
+export const HEADER_Y = 100  // 头部高度
+export const SIDER_LEFT_X = 200  // 左边宽度
+
 
 export const getStyle = (data: any) => {
     const changeDataList = ["top", "left", "width", "height"]
