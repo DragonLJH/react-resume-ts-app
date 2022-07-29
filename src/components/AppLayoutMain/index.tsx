@@ -57,7 +57,7 @@ const AppLayoutMain: FC = () => {
 
 
     return (
-        <div className="AppLayoutMain" onDrop={useMyDrop} onDragOver={myDragOver}>
+        <div className="AppLayoutMain" onDrop={useMyDrop} onDragOver={myDragOver} onMouseDown={() => myAuth.changeSelect()}>
             {myAuth.state.componentData.map((item: any) => {
                 return <Control element={item} activeComponent={myAuth.state.selectComponentIndex === item.id} style={{ ...item.style }} key={item.id}>{item.component()}</Control>
             })}

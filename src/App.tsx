@@ -27,7 +27,7 @@ const App: FC = () => {
       dispatch({ type: 'increment', data: data })
       dispatch({ type: 'change-select', data: data })
     }
-    const changeSelect = (data: any) => {
+    const changeSelect = (data: any = {}) => {
       console.log("changeSelect", data)
       dispatch({ type: 'change-select', data: data })
     }
