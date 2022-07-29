@@ -2,12 +2,14 @@ import React, { FC, useReducer } from 'react';
 import './index.css';
 import componentList from "../../custom-component/component-list"
 import Control from "./Control";
+import { HEADER_Y, SIDER_LEFT_X } from "../../utils";
 
 var id = 0;
 
 function getID() {
     return id++
 }
+
 
 const AppLayoutMain: FC = () => {
     const initialState = { componentData: [] };
@@ -26,7 +28,7 @@ const AppLayoutMain: FC = () => {
         let index = e.dataTransfer.getData("index");
         let componentItem = componentList[index]
         let { clientX, clientY }: { clientX: number, clientY: number } = e
-        componentItem.style = { ...componentItem.style, left: clientX - 200, top: clientY - 100 }
+        componentItem.style = { ...componentItem.style, left: clientX - SIDER_LEFT_X, top: clientY - HEADER_Y }
         dispatch({ type: 'increment', data: { ...componentItem, id: "component" + getID() } })
         e.preventDefault();
         e.stopPropagation();
