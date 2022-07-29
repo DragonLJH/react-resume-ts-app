@@ -9,14 +9,12 @@ const { Header, Footer, Sider, Content } = Layout;
 
 const App: FC = () => {
   const useAuth = (): any => {
-    const initialState = { componentData: [], selectComponent: {}, selectComponentIndex: "", };
+    const initialState = { componentData: [], selectComponent: {}, selectComponentIndex: "" };
     const reducer = (prevState: any, action: any) => {
       let { data } = action
-
       switch (action.type) {
         case 'increment':
           return { ...prevState, componentData: [...prevState.componentData, data] };
-
         case 'change-select':
           return { ...prevState, selectComponent: data, selectComponentIndex: data.id };
         default:
@@ -25,11 +23,16 @@ const App: FC = () => {
     }
     const [state, dispatch] = useReducer(reducer, initialState);
     const increment = (data: any) => {
+      console.log("increment", data)
       dispatch({ type: 'increment', data: data })
-      console.log("App", data)
+      dispatch({ type: 'change-select', data: data })
+    }
+    const changeSelect = (data: any) => {
+      console.log("changeSelect", data)
+      dispatch({ type: 'change-select', data: data })
     }
     return {
-      state, increment
+      state, increment, changeSelect
     }
   }
 

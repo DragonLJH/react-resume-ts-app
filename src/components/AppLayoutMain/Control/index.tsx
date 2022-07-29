@@ -1,17 +1,21 @@
-import React, { FC, useEffect, useState } from 'react';
+import { FC, useEffect, useState, useContext } from 'react';
 import './index.css';
 import { getStyle } from "../../../utils/index";
+import commonContext from "../../../commonContext";
 
 interface ControlProps {
     style?: any;
     // children?: Element | React.ReactNode; 
     children?: any;
+    activeComponent?: any;
+    element?: any;
 }
 
 const Control: FC<ControlProps> = (props: ControlProps) => {
     /*-------------------------------------节点控制组件放大缩小以及整体移动------------------------------------------*/
-
-    const { children, style } = props;
+    //状态管理，在App.tsx管理调用
+    const myAuth: any = useContext(commonContext);
+    const { children, style, activeComponent, element } = props;
     const [controlstyle, setControlStyle] = useState({
         top: 0,
         left: 0,
@@ -39,6 +43,7 @@ const Control: FC<ControlProps> = (props: ControlProps) => {
 
     const relocation = (e: any, name: string = "acquiesce") => {  // name（默认值：acquiesce（默许））不传值默认为整体移动
 
+        myAuth.changeSelect(element)
         e.stopPropagation();
         e.preventDefault();
 
@@ -91,7 +96,7 @@ const Control: FC<ControlProps> = (props: ControlProps) => {
 
     return (
         <div className="Control" style={getStyle({ ...controlstyle })} onMouseDown={relocation}>
-            <div className="moveComponent">
+            <div className={`moveComponent ${activeComponent ? 'active' : ''}`} >
                 {children}
                 {moveList.map((val) => {
                     return <div key={val.circleName} className={`circle ${val.circleName}`} style={getStyle(val.style)} onMouseDown={(e) => relocation(e, val.circleName)} ></div>
