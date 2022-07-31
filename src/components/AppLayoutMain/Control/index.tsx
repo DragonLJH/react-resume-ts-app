@@ -1,6 +1,6 @@
-import { FC, useEffect, useState, useContext } from 'react';
+import { FC, useEffect, useState, useContext, useMemo, useRef, useCallback } from 'react';
 import './index.css';
-import { getStyle } from "../../../utils/index";
+import { getStyle, HEADER_Y, SIDER_LEFT_X } from "../../../utils/index";
 import commonContext from "../../../commonContext";
 
 interface ControlProps {
@@ -9,24 +9,39 @@ interface ControlProps {
     children?: any;
     activeComponent?: any;
     element?: any;
+    index?: number;
 }
+
 
 const Control: FC<ControlProps> = (props: ControlProps) => {
     /*-------------------------------------节点控制组件放大缩小以及整体移动------------------------------------------*/
     //状态管理，在App.tsx管理调用
     const myAuth: any = useContext(commonContext);
-    const { children, style, activeComponent, element } = props;
-    const [controlstyle, setControlStyle] = useState({
-        top: 0,
-        left: 0,
-        width: 0,
-        height: 0,
-    })
+    const { children, style, activeComponent, element, index } = props;
+
+
+    const [controlstyle, setControlStyle] = useState({ top: 0, left: 0, width: 0, height: 0 })
 
     useEffect(() => {
-        let { top, left, width, height } = style
-        setControlStyle({ top, left, width, height })
+        setControlStyle(style)
     }, [])
+
+    // useMemo(() => {
+    //     myAuth.changeSelectStyle(controlstyle, index)
+    //     // console.log("useMemo",controlstyle,myAuth.state.componentData)
+    // }, [controlstyle]);
+
+    let guideList = [  //辅助线(绝对定位的辅助线，需要加上头部固定高度和左边固定宽度)
+        { guideName: "guideT", style: { top: controlstyle.top + HEADER_Y, left: 0 } },
+        { guideName: "guideB", style: { top: controlstyle.top + controlstyle.height + HEADER_Y, left: 0 } },
+        { guideName: "guideL", style: { top: 0, left: controlstyle.left + SIDER_LEFT_X } },
+        { guideName: "guideR", style: { top: 0, left: controlstyle.left + controlstyle.width + SIDER_LEFT_X } },
+    ]
+
+    // useEffect(() => {
+    //     let { top, left, width, height } = style
+    //     setControlStyle({ top, left, width, height })
+    // }, [])
 
     const circleWc = 3  //circle宽高6px ，误差3px
     let moveList = [  //8个点控制组件大小
@@ -42,8 +57,7 @@ const Control: FC<ControlProps> = (props: ControlProps) => {
 
 
     const relocation = (e: any, name: string = "acquiesce") => {  // name（默认值：acquiesce（默许））不传值默认为整体移动
-
-        myAuth.changeSelect(element)
+        myAuth.changeSelect(element, index)  //点击改变选中对象
         e.stopPropagation();
         e.preventDefault();
 
@@ -68,8 +82,50 @@ const Control: FC<ControlProps> = (props: ControlProps) => {
                 left += x
             }
             if (width > 10 && height > 10 && top >= 0 && left >= 0) {  //当宽度高度小于10的时候停止缩小,当 x y 坐标小于0时停止移动
-                setControlStyle({ top, left, width, height })
+                setControlStyle({ ...controlstyle, top, left, width, height })
+                // myAuth.changeSelectStyle({ ...controlstyle, top, left, width, height }, index)
+                adsorbGuide({ top, left, width, height })
             }
+        }
+
+        //吸附功能
+        const adsorbGuide = (data: any) => {
+            let ADSORB_SPACING = 10 //吸附界限
+            let { top: stop, left: sleft, width: swidth, height: sheight } = data;
+            let { id: sid } = myAuth.state.selectComponent;
+            if (myAuth.state.temporaryComponentData.length > 1) {
+                for (let i = 0; i < myAuth.state.temporaryComponentData.length; i++) {  // 对比
+                    if (myAuth.state.temporaryComponentData[i].id !== sid) {
+                        let { top, left, width, height } = myAuth.state.temporaryComponentData[i].style
+                        // 吸附
+                        if (Math.abs((stop + sheight) - top) < ADSORB_SPACING) {
+                            stop = top - sheight
+                        }
+                        if (Math.abs((sleft - swidth) - left) < ADSORB_SPACING) {
+                            sleft = left - swidth
+                        }
+                        if (Math.abs(stop - top) < ADSORB_SPACING) { 
+                            stop = top
+                        }
+                        if (Math.abs(sleft - left) < ADSORB_SPACING) {
+                            sleft = left
+                        }
+                        if (Math.abs(stop - (top + height)) < ADSORB_SPACING) {
+                            stop = top + height
+                        }
+                        if (Math.abs(sleft - (left + width)) < ADSORB_SPACING) {
+                            sleft = left + width
+                        }
+                        
+                        setControlStyle({ ...controlstyle, top: stop, left: sleft, width: swidth, height: sheight })
+                        myAuth.changeSelectStyle({ ...controlstyle, top: stop, left: sleft, width: swidth, height: sheight }, index)
+                        // console.log({ stop, sleft, swidth, sheight })
+                        // break;
+                    }
+                }
+            }
+
+
         }
 
 
@@ -81,6 +137,8 @@ const Control: FC<ControlProps> = (props: ControlProps) => {
             // 移动后的坐标
             let { clientX: moveX, clientY: moveY }: { clientX: number, clientY: number } = moveEvent
             switchSet(moveX - InitialValueX, moveY - InitialValueY)
+            // console.log(myAuth.state)
+            // adsorbGuide()
         }
 
         const up = (e: any) => {  // 鼠标松开结束事件的监听
@@ -94,12 +152,18 @@ const Control: FC<ControlProps> = (props: ControlProps) => {
     }
 
 
+
+
+
     return (
         <div className="Control" style={getStyle({ ...controlstyle })} onMouseDown={relocation}>
             <div className={`moveComponent ${activeComponent ? 'active' : ''}`} >
                 {children}
                 {moveList.map((val) => {
                     return <div key={val.circleName} className={`circle ${val.circleName}`} style={getStyle(val.style)} onMouseDown={(e) => relocation(e, val.circleName)} ></div>
+                })}
+                {guideList.map((val) => {
+                    return <div key={val.guideName} className={`guide ${val.guideName}`} style={getStyle(val.style)}></div>
                 })}
             </div>
         </div>

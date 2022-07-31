@@ -9,14 +9,18 @@ const { Header, Footer, Sider, Content } = Layout;
 
 const App: FC = () => {
   const useAuth = (): any => {
-    const initialState = { componentData: [], selectComponent: {}, selectComponentIndex: "" };
+    const initialState = { componentData: [], temporaryComponentData: [], selectComponent: {}, selectComponentIndex: -1 };
     const reducer = (prevState: any, action: any) => {
-      let { data } = action
+      let { data, index } = action
       switch (action.type) {
         case 'increment':
-          return { ...prevState, componentData: [...prevState.componentData, data] };
+          return { ...prevState, componentData: [...prevState.componentData, data], temporaryComponentData: [...prevState.temporaryComponentData, data] };
+        case 'updata-component-data':
+          return { ...prevState, temporaryComponentData: data };
         case 'change-select':
-          return { ...prevState, selectComponent: data, selectComponentIndex: data.id };
+          return { ...prevState, selectComponent: data, selectComponentIndex: index };
+        case 'updata-select':
+          return { ...prevState, selectComponent: data };
         default:
           throw new Error();
       }
@@ -25,14 +29,23 @@ const App: FC = () => {
     const increment = (data: any) => {
       console.log("increment", data)
       dispatch({ type: 'increment', data: data })
-      dispatch({ type: 'change-select', data: data })
+      dispatch({ type: 'change-select', data: data, index: state.componentData.length })
     }
-    const changeSelect = (data: any = {}) => {
-      console.log("changeSelect", data)
-      dispatch({ type: 'change-select', data: data })
+    const changeSelect = (data: any = {}, index: number = -1) => {
+      console.log("changeSelect", data, index)
+      dispatch({ type: 'change-select', data: data, index: index })
+    }
+    const changeSelectStyle = (data: any, index: number) => {
+      let newSelectComponent = { ...state.selectComponent }
+      let newTemporaryComponentData = [...state.temporaryComponentData]
+      newSelectComponent.style = data
+
+      newTemporaryComponentData.splice(index, 1, newSelectComponent)
+      console.log("changeSelectStyle", newTemporaryComponentData)
+      dispatch({ type: 'updata-component-data', data: newTemporaryComponentData })
     }
     return {
-      state, increment, changeSelect
+      state, increment, changeSelect, changeSelectStyle
     }
   }
 
