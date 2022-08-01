@@ -1,5 +1,6 @@
-import { FC, useContext } from 'react';
+import { FC, useContext, useEffect, useState } from 'react';
 import './index.css';
+import { Spin } from 'antd';
 import componentList from "../../custom-component/component-list"
 import Control from "./Control";
 import commonContext from "../../commonContext";
@@ -16,6 +17,14 @@ const AppLayoutMain: FC = () => {
     /*-----------------------------------拖拽添加组件-------------------------------------------*/
     //状态管理，在App.tsx管理调用
     const myAuth: any = useContext(commonContext);
+
+    const [loading, setLoading] = useState(false);
+    
+    useEffect(() => {
+        setLoading(false)
+        console.log("AppLayoutMain-useEffect")
+    })
+
 
     // const initialState = { componentData: [], selectComponent: {}, selectComponentIndex: "", };
     // const reducer = (prevState: any, action: any) => {
@@ -44,23 +53,36 @@ const AppLayoutMain: FC = () => {
         e.stopPropagation();
     }
 
-    const myDragOver = (e: any) => {  // 让拖拽事件获取落点的 x y（clientX，clientY） 坐标
-
+    const myDragOver = (e: any) => {  // 让拖拽事件获取落点的 x y（clientX，clientY） 坐标 
         e.preventDefault();
         e.stopPropagation();
-
     }
 
     /*------------------------------------------------------------------------------*/
 
+    // const ControlsComponent = () => {
+
+    //     myAuth.state.componentData.map((item: any, index: number) => {
+    //         return <Control setComponentData={setComponentData} element={item} index={index} activeComponent={myAuth.state.selectComponent.id === item.id} key={item.id}>{item.component()}</Control>
+    //     })
+    // }  
+    const setComponentData = (data: any, index: number) => {
+        setLoading(true)
+        let newComponentData = [...myAuth.state.componentData]
+        newComponentData.splice(index, 1, data)
+        myAuth.updataSelectComponent(data)
+        myAuth.updataComponentData(newComponentData)
+    }
 
 
 
     return (
         <div className="AppLayoutMain" onDrop={useMyDrop} onDragOver={myDragOver} onMouseDown={() => myAuth.changeSelect()}>
-            {myAuth.state.componentData.map((item: any, index: number) => {
-                return <Control element={item} index={index} activeComponent={myAuth.state.selectComponent.id === item.id} style={{ ...item.style }} key={item.id}>{item.component()}</Control>
-            })}
+            <Spin spinning={loading}>
+                {myAuth.state.componentData.map((item: any, index: number) => {
+                    return <Control setComponentData={setComponentData} element={item} index={index} activeComponent={myAuth.state.selectComponent.id === item.id} key={item.id}>{item.component(item.propValuel)}</Control>
+                })}
+            </Spin>
         </div>
     )
 };

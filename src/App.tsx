@@ -4,22 +4,23 @@ import { Layout } from 'antd';
 import './App.css';
 import AppLayoutLeft from "./components/AppLayoutLeft/index"
 import AppLayoutMain from "./components/AppLayoutMain/index"
+import AppLayoutRight from "./components/AppLayoutRight/index"
 
 const { Header, Footer, Sider, Content } = Layout;
 
 const App: FC = () => {
   const useAuth = (): any => {
-    const initialState = { componentData: [], temporaryComponentData: [], selectComponent: {}, selectComponentIndex: -1 };
+    const initialState = { componentData: [], selectComponent: {}, selectComponentIndex: -1 };
     const reducer = (prevState: any, action: any) => {
       let { data, index } = action
       switch (action.type) {
         case 'increment':
-          return { ...prevState, componentData: [...prevState.componentData, data], temporaryComponentData: [...prevState.temporaryComponentData, data] };
+          return { ...prevState, componentData: [...prevState.componentData, data] };
         case 'updata-component-data':
-          return { ...prevState, temporaryComponentData: data };
+          return { ...prevState, componentData: data };
         case 'change-select':
           return { ...prevState, selectComponent: data, selectComponentIndex: index };
-        case 'updata-select':
+        case 'updata-select-component':
           return { ...prevState, selectComponent: data };
         default:
           throw new Error();
@@ -35,17 +36,15 @@ const App: FC = () => {
       console.log("changeSelect", data, index)
       dispatch({ type: 'change-select', data: data, index: index })
     }
-    const changeSelectStyle = (data: any, index: number) => {
-      let newSelectComponent = { ...state.selectComponent }
-      let newTemporaryComponentData = [...state.temporaryComponentData]
-      newSelectComponent.style = data
-
-      newTemporaryComponentData.splice(index, 1, newSelectComponent)
-      console.log("changeSelectStyle", newTemporaryComponentData)
-      dispatch({ type: 'updata-component-data', data: newTemporaryComponentData })
+    const updataComponentData = (data: any) => { 
+      dispatch({ type: 'updata-component-data', data: data })
+    }
+    const updataSelectComponent = (data: any) => {
+      console.log("updataSelectComponent", data)
+      dispatch({ type: 'updata-select-component', data: data })
     }
     return {
-      state, increment, changeSelect, changeSelectStyle
+      state, increment, changeSelect, updataComponentData, updataSelectComponent
     }
   }
 
@@ -63,7 +62,9 @@ const App: FC = () => {
             <Content className="app-layout-main">
               <AppLayoutMain />
             </Content>
-            <Sider className="app-layout-right" width="250"></Sider>
+            <Sider className="app-layout-right" width="250">
+              <AppLayoutRight />
+            </Sider>
           </Layout>
           <Footer className="app-footer"></Footer>
         </Layout>
