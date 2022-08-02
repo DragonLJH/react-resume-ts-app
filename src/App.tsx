@@ -36,7 +36,8 @@ const App: FC = () => {
       console.log("changeSelect", data, index)
       dispatch({ type: 'change-select', data: data, index: index })
     }
-    const updataComponentData = (data: any) => { 
+    const updataComponentData = (data: any) => {
+      console.log("updataComponentData", data)
       dispatch({ type: 'updata-component-data', data: data })
     }
     const updataSelectComponent = (data: any) => {
