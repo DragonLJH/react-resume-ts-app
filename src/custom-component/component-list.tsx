@@ -6,10 +6,10 @@ import ResumeText from "./ResumeText"
 
 const componentList: Array<any> = [
     {
-        component: (data: any) => <ResumeText {...data} />,
+        component: (data: any) => <ResumeText propValuel={data} />,
         componentId: 0,
         label: "文本",
-        propValueL: "内容",
+        propValuel: "内容",
         style: {
             width: 50,
             height: 22,

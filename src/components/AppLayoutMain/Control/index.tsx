@@ -27,7 +27,7 @@ const Control: FC<ControlProps> = (props: ControlProps) => {
 
     useEffect(() => {
         setInsideData(element.style)
-    }, [])
+    }, [element])  // 监听element的修改（同步由表单控件修改的数据）
 
 
 
@@ -86,7 +86,7 @@ const Control: FC<ControlProps> = (props: ControlProps) => {
                 ref.current = setTimeout(() => {
                     element.style = { ...insideData, top, left, width, height }
                     setComponentData(element, index)
-                }, 1000)
+                }, 100)
 
             }
         }
@@ -126,7 +126,7 @@ const Control: FC<ControlProps> = (props: ControlProps) => {
                         ref.current = setTimeout(() => {
                             element.style = { ...insideData, top: stop, left: sleft, width: swidth, height: sheight }
                             setComponentData(element, index)
-                        }, 1000)
+                        }, 100)
                     }
                 }
             }
