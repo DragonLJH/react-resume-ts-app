@@ -4,7 +4,7 @@ export const SIDER_LEFT_X = 200  // 左边宽度
 
 
 export const getStyle = (data: any) => {
-    const changeDataList = ["top", "left", "width", "height"]
+    const changeDataList = ["top", "left", "width", "height", "fontSize"]
     changeDataList.forEach((val) => {
         if (data[val]) {
             data[val] = data[val] + "px"
