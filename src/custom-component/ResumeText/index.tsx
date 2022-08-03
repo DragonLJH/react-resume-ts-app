@@ -1,11 +1,12 @@
 import React, { FC } from 'react';
 import './index.css';
 interface ResumeTextProps {
-    propValuel: string
+    text: string
 }
 const ResumeText: FC<ResumeTextProps> = (props: ResumeTextProps) => {
+    const { text } = props
     return (
-        <div className="ResumeText">{props.propValuel}</div>
+        <div className="ResumeText">{text}</div>
     )
 };
 

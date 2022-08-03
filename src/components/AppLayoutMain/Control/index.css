@@ -1,4 +1,4 @@
-.Control {
+.Control { 
     position: absolute;
     background-color: #ddd;
 }
@@ -68,7 +68,7 @@ w-resize 	此光标指示矩形框的边缘可被向左移动（西）。 */
 .Control>.moveComponent.active>.guide {
     position: fixed;
     outline: solid 1px #40a9ff;
-    z-index: 999;
+    z-index: 0;
 }
 
 .Control>.moveComponent>.guideT, .Control>.moveComponent>.guideB {
