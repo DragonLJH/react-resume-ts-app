@@ -42,10 +42,12 @@
 .App  .app-header,.App  .app-footer{
   height: 100px;
   background-color: #bbb ;
+  z-index: 1;
 }
 .App .app-layout{ 
-  min-height: 600px;
+  min-height: 700px;
 }
 .App .app-layout > aside{
   background-color: #ddd ;  
+  z-index: 1;
 }

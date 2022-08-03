@@ -3,12 +3,10 @@ import './index.css';
 import registerComponent from "../../custom-component"
 
 
-const AppLayoutLeft: FC = () => {
-    console.log("AppLayoutLeft", registerComponent)
+const AppLayoutLeft: FC = () => { 
 
     const myDragstart = (e: any) => {
-        e.dataTransfer.setData("index", e.target.dataset.index);
-        console.log("AppLayoutLeft-myDragstart", e)
+        e.dataTransfer.setData("index", e.target.dataset.index); 
     }
 
     return (
