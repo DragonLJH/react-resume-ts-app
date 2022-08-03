@@ -1,6 +1,6 @@
 
 // 类型导出需要添加 declare 
-export declare type styleType = {
+export declare type commomType = {
     inputType: string;
     label: string;
     name: string;
@@ -13,8 +13,7 @@ export const commomStyle: any = {
     width: { inputType: "inputNumber", label: "宽" },
     height: { inputType: "inputNumber", label: "高" },
 }
-
-
+// 配置样式
 export const configStyle: any = {
     ...commomStyle,
     backgroundColor: { inputType: "input", label: "背景颜色" },
@@ -30,5 +29,34 @@ export const configStyle: any = {
     },
 }
 
+// 公共属性（内容）
+export const commomAttribute: any = {
+    text: { inputType: "textArea", label: "内容" },
+}
 
+// 配置属性
+// 注意：(select + componentId) 区分可能会相同的属性
+export const configAttribute: any = {
+    select0: { ...commomAttribute, },
+    select1: {
+        ...commomAttribute,
+        orientation: {
+            inputType: "select", label: "分割线标题的位置", chidren: [
+                { value: "left", label: "左", },
+                { value: "center", label: "居中", },
+                { value: "right", label: "右", },
+            ]
+        },
+        type: {
+            inputType: "select", label: "水平/垂直", chidren: [
+                { value: "horizontal", label: "水平", },
+                { value: "vertical", label: "垂直", },
+            ]
+        },
+    },
+    select2: {
+        ...commomAttribute,
+        src: { inputType: "Upload", label: "上传图片", }
+    },
 
+}

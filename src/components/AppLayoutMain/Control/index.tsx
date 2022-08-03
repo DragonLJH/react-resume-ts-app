@@ -77,7 +77,7 @@ const Control: FC<ControlProps> = (props: ControlProps) => {
                 top += y
                 left += x
             }
-            if (width > 10 && height > 10 && top >= 0 && left >= 0) {  //当宽度高度小于10的时候停止缩小,当 x y 坐标小于0时停止移动
+            if (width > 10 && height > 10 && top > 0 && left > 0) {  //当宽度高度小于10的时候停止缩小,当 x y 坐标小于0时停止移动
                 setInsideData({ ...insideData, top, left, width, height })
                 adsorbGuide({ top, left, width, height })
 

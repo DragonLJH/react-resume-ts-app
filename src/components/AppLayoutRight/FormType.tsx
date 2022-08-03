@@ -1,6 +1,8 @@
 import { FC, useEffect, useState } from 'react';
-import { Select, Input, InputNumber, } from 'antd';
+
+import { Select, Input, InputNumber, Upload, Image } from 'antd';
 const { Option } = Select;
+const { TextArea } = Input;
 
 interface FormTypeObj {
     inputType: string;
@@ -15,15 +17,25 @@ interface SelectObj {
 
 // 自定义表单控件，根据提供的inputType来对应生成表单控件
 const formTypeConfig: any = {
-    "input": (val: any, set: any) => <Input value={val} onChange={set} />,
-    "inputNumber": (val: any, set: any) => <InputNumber value={val} onChange={set} />,
+    "input": (val: any, set: any) => <Input value={val} onChange={(e) => set(e.target.value)} />,
+    "textArea": (val: any, set: any) => <TextArea value={val} onChange={(e) => set(e.target.value)} />,
+    "inputNumber": (val: any, set: any) => <InputNumber min={1} value={val} onChange={set} />,
     "select": (val: any, set: any, props: Array<SelectObj>) => {
         return (<Select value={val} onChange={set} >
             {props.map((val: SelectObj) => {
                 return <Option key={val.value} value={val.value}>{val.label}</Option>
             })}
         </Select>)
+    },
+    "Upload": (val: any, set: any) => {
+        return (
+            <Upload maxCount={1} onChange={(e) => { set(e.file.response) }}
+                name="uploadRotationImg" action="http://150.158.96.29:8781/rotation/uploadRotationImg" listType="picture">
+                <Image preview={false} src={val} fallback="http://150.158.96.29:8082/commom-img/error.png" />
+            </Upload>
+        )
     }
+
 }
 
 // 自定义表单控件
@@ -35,15 +47,16 @@ const formTypeConfig: any = {
 //    注意 initialValues 不能被 setState 动态更新，你需要用 setFieldsValue 来更新。
 // 3、你不应该用 setState，可以使用 form.setFieldsValue 来动态改变表单值。
 const FormType: FC<FormTypeObj> = (props: FormTypeObj) => {
-    const { inputType, chidren, value, onChange } = props  // value 由设置了 name 属性的Form.Item自动添加
+    const { inputType, chidren, value, onChange } = props  // value 由设置了 name 属性的Form.Item自动添加 
     const [val, setVal] = useState(value)
     useEffect(() => {
         setVal(value)
-    })
+    }, [value])
     const setFun = (val: any) => {
         onChange(val)  // onChange 事件 由设置了 name 属性的Form.Item自动添加，修改的值同步到 form
         setVal(val)
     }
+
     return (formTypeConfig[inputType](val, setFun, chidren))
 }
 

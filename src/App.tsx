@@ -63,7 +63,7 @@ const App: FC = () => {
             <Content className="app-layout-main">
               <AppLayoutMain />
             </Content>
-            <Sider className="app-layout-right" width="250">
+            <Sider className="app-layout-right" width="300">
               <AppLayoutRight />
             </Sider>
           </Layout>

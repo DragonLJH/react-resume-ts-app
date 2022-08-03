@@ -1,6 +1,6 @@
 import { FC, useContext, useEffect, useState } from 'react';
 import './index.css';
-import { Spin } from 'antd';
+
 import componentList from "../../custom-component/component-list"
 import Control from "./Control";
 import commonContext from "../../commonContext";
@@ -13,17 +13,11 @@ function getID() {
 }
 
 
+
 const AppLayoutMain: FC = () => {
     /*-----------------------------------拖拽添加组件-------------------------------------------*/
     //状态管理，在App.tsx管理调用
     const myAuth: any = useContext(commonContext);
-
-    const [loading, setLoading] = useState(false);
-    
-    useEffect(() => {
-        setLoading(false)
-        console.log("AppLayoutMain-useEffect")
-    })
 
 
     // const initialState = { componentData: [], selectComponent: {}, selectComponentIndex: "", };
@@ -67,7 +61,6 @@ const AppLayoutMain: FC = () => {
     //     })
     // }  
     const setComponentData = (data: any, index: number) => {
-        setLoading(true)
         let newComponentData = [...myAuth.state.componentData]
         newComponentData.splice(index, 1, data)
         myAuth.updataSelectComponent(data)
@@ -78,11 +71,9 @@ const AppLayoutMain: FC = () => {
 
     return (
         <div className="AppLayoutMain" onDrop={useMyDrop} onDragOver={myDragOver} onMouseDown={() => myAuth.changeSelect()}>
-            <Spin spinning={loading}>
-                {myAuth.state.componentData.map((item: any, index: number) => {
-                    return <Control setComponentData={setComponentData} element={item} index={index} activeComponent={myAuth.state.selectComponent.id === item.id} key={item.id}>{item.component(item.propValuel)}</Control>
-                })}
-            </Spin>
+            {myAuth.state.componentData.map((item: any, index: number) => {
+                return <Control setComponentData={setComponentData} element={item} index={index} activeComponent={myAuth.state.selectComponent.id === item.id} key={item.id}>{item.component(item.propValue)}</Control>
+            })}
         </div>
     )
 };
