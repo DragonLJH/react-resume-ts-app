@@ -8,3 +8,22 @@
     /* margin: 10px; */
     background-color: #eee;
 }
+
+.AppLayoutMain>.guide {
+    position: absolute;
+}
+
+.AppLayoutMain>.guide.active {
+    outline: solid 1px #40a9ff;
+}
+
+.AppLayoutMain>.guideT, .AppLayoutMain>.guideB {
+    width: 100%;
+    transform: scaleY(0.5);
+}
+
+
+.AppLayoutMain>.guideL, .AppLayoutMain>.guideR {
+    height: 100%;
+    transform: scaleX(0.5);
+}

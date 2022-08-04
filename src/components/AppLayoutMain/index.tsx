@@ -4,7 +4,7 @@ import './index.css';
 import componentList from "../../custom-component/component-list"
 import Control from "./Control";
 import commonContext from "../../commonContext";
-import { HEADER_Y, SIDER_LEFT_X } from "../../utils";
+import { getStyle, HEADER_Y, SIDER_LEFT_X } from "../../utils";
 
 var id = 0;
 
@@ -18,6 +18,23 @@ const AppLayoutMain: FC = () => {
     /*-----------------------------------拖拽添加组件-------------------------------------------*/
     //状态管理，在App.tsx管理调用
     const myAuth: any = useContext(commonContext);
+    let { selectComponent, selectComponentIndex } = myAuth.state
+    let { style } = selectComponent
+
+    const [mainInsideData, setMainInsideData] = useState({ top: 0, left: 0, width: 0, height: 0 }) //拖拽实时
+
+    useEffect(() => {
+        if (selectComponentIndex !== -1) {
+            setMainInsideData(style)
+        }
+    }, [style])
+
+    let guideList = [  //辅助线(absolute定位的辅助线)
+        { guideName: "guideT", style: { top: mainInsideData.top, left: 0 } },
+        { guideName: "guideB", style: { top: mainInsideData.top + mainInsideData.height, left: 0 } },
+        { guideName: "guideL", style: { top: 0, left: mainInsideData.left } },
+        { guideName: "guideR", style: { top: 0, left: mainInsideData.left + mainInsideData.width } },
+    ]
 
 
     // const initialState = { componentData: [], selectComponent: {}, selectComponentIndex: "", };
@@ -67,12 +84,21 @@ const AppLayoutMain: FC = () => {
         myAuth.updataComponentData(newComponentData)
     }
 
+    const setMainInsideDataFun = (data: any) => {
+        // console.log("setMainInsideDataFun", data) 
+        setMainInsideData(data)
+    }
+
 
 
     return (
         <div className="AppLayoutMain" onDrop={useMyDrop} onDragOver={myDragOver} onMouseDown={() => myAuth.changeSelect()}>
             {myAuth.state.componentData.map((item: any, index: number) => {
-                return <Control setComponentData={setComponentData} element={item} index={index} activeComponent={myAuth.state.selectComponent.id === item.id} key={item.id}>{item.component(item.propValue)}</Control>
+                return <Control setMainInsideData={setMainInsideDataFun} setComponentData={setComponentData} element={item} index={index} activeComponent={myAuth.state.selectComponent.id === item.id} key={item.id}>{item.component(item.propValue)}</Control>
+            })}
+
+            {guideList.map((val) => {
+                return <div key={val.guideName} className={`guide ${val.guideName} ${myAuth.state.selectComponentIndex !== -1 ? 'active' : ''}`} style={getStyle(val.style)}></div>
             })}
         </div>
     )
