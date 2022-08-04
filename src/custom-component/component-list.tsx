@@ -8,7 +8,8 @@ const componentList: Array<any> = [
         componentId: 0,
         label: "文本",
         propValue: {
-            text: "内容"
+            text: "内容",
+            icon: ""
         },
         style: {
             width: 50,
@@ -16,7 +17,7 @@ const componentList: Array<any> = [
             fontSize: 14,
             fontWeight: 100,
             backgroundColor: null,
-            textAlign: 'center', 
+            textAlign: 'center',
             color: null,
         },
     },
@@ -26,6 +27,7 @@ const componentList: Array<any> = [
         label: "分割线",
         propValue: {
             text: "内容",
+            icon: "",
             orientation: "center",
             type: "horizontal"
         },
@@ -52,7 +54,7 @@ const componentList: Array<any> = [
             fontSize: 14,
             fontWeight: 100,
             backgroundColor: 'rgba(0,0,0,0)',
-            textAlign: 'center', 
+            textAlign: 'center',
             color: null,
         },
     },

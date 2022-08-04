@@ -15,10 +15,10 @@ const ResumeText: FC<ResumeTextProps> = (props: ResumeTextProps) => {
     }
     // 识别空格符和换行符
     const TextComponent = (): any => {
-        return text.split("").map((val) => {
-            if (val === " ") return <span>&nbsp;</span>
-            if (val === "\n") return <br />
-            return <span>{val}</span>
+        return text.split("").map((val, index) => {
+            if (val === " ") return <span key={index}>&nbsp;</span>
+            if (val === "\n") return <br key={index} />
+            return <span key={index}>{val}</span>
         })
     }
     return (
