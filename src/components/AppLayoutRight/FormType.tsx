@@ -1,4 +1,5 @@
 import { FC, useEffect, useState } from 'react';
+import iconConfig from "../../utils/icon-config";
 
 import { Select, Input, InputNumber, Upload, Image } from 'antd';
 const { Option } = Select;
@@ -11,8 +12,8 @@ interface FormTypeObj {
     chidren?: Array<SelectObj>;
 }
 interface SelectObj {
-    value?: string;
-    label?: string;
+    value: string;
+    label: string;
 }
 
 // 自定义表单控件，根据提供的inputType来对应生成表单控件
@@ -27,6 +28,15 @@ const formTypeConfig: any = {
             })}
         </Select>)
     },
+    // "selectIcon": (val: any, set: any, props: Array<SelectObj>) => {
+    //     return (<Select value={val} onChange={set} >
+    //         {props.map((val: SelectObj) => {
+    //             return (<Option key={val.value} value={val.value}>
+    //                 {iconConfig[val.value]()} {val.label}
+    //             </Option>)
+    //         })}
+    //     </Select>)
+    // },
     "Upload": (val: any, set: any) => {
         return (
             <Upload maxCount={1} onChange={(e) => { set(e.file.response) }}

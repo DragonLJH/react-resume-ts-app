@@ -90,7 +90,7 @@ const Control: FC<ControlProps> = (props: ControlProps) => {
                         // element.style = { ...insideData, ...newStyle }
                         setComponentData({ ...element, style: { ...insideData, ...newStyle } }, index)
                     }, 100)
-                } else {
+                } else {    //多个组件的时候调用
                     adsorbGuide({ ...newStyle })
                 }
             }

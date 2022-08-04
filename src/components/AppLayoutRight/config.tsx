@@ -14,7 +14,7 @@ export const commomStyle: any = {
     width: { inputType: "inputNumber", label: "宽" },
     height: { inputType: "inputNumber", label: "高" }
 }
-export const iconStyle: any = {
+export const iconAttribute: any = {
     icon: {
         inputType: "select", label: "Icon", chidren: [
             { value: "", label: "", },
@@ -50,10 +50,11 @@ export const commomAttribute: any = {
 export const configAttribute: any = {
     select0: {
         ...commomAttribute,
-        ...iconStyle
+        ...iconAttribute
     },
     select1: {
         ...commomAttribute,
+        ...iconAttribute,
         orientation: {
             inputType: "select", label: "分割线标题的位置", chidren: [
                 { value: "left", label: "左", },
