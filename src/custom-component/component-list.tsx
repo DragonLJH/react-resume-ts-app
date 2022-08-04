@@ -35,7 +35,7 @@ const componentList: Array<any> = [
             fontSize: 14,
             fontWeight: 100,
             backgroundColor: 'rgba(0,0,0,0)',
-            textAlign: 'center', 
+            // textAlign: 'center', 
             color: null,
         },
     },

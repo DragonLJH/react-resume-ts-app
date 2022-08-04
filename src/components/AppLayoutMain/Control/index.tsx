@@ -11,6 +11,7 @@ interface ControlProps {
     element?: any;
     index?: number;
     setComponentData?: any;
+    setMainInsideData?: any;
 }
 
 
@@ -18,8 +19,8 @@ const Control: FC<ControlProps> = (props: ControlProps) => {
     /*-------------------------------------节点控制组件放大缩小以及整体移动------------------------------------------*/
     //状态管理，在App.tsx管理调用
     const myAuth: any = useContext(commonContext);
-    const { children, activeComponent, element, index, setComponentData } = props;
-    const ref = useRef<NodeJS.Timeout | null>(null) //useRef 用来存储之前的定时器
+    const { children, activeComponent, element, index, setComponentData, setMainInsideData } = props;
+    const ref = useRef<NodeJS.Timeout | null>(null) //useRef 用来存储之前的定时器 
 
 
     const [insideData, setInsideData] = useState({ top: 0, left: 0, width: 0, height: 0 }) //拖拽实时
@@ -31,7 +32,7 @@ const Control: FC<ControlProps> = (props: ControlProps) => {
 
 
 
-    let guideList = [  //辅助线(绝对定位的辅助线，需要加上头部固定高度和左边固定宽度)
+    let guideList = [  //辅助线(fixed定位的辅助线，需要加上头部固定高度和左边固定宽度)
         { guideName: "guideT", style: { top: insideData.top + HEADER_Y, left: 0 } },
         { guideName: "guideB", style: { top: insideData.top + insideData.height + HEADER_Y, left: 0 } },
         { guideName: "guideL", style: { top: 0, left: insideData.left + SIDER_LEFT_X } },
@@ -78,22 +79,26 @@ const Control: FC<ControlProps> = (props: ControlProps) => {
                 left += x
             }
             if (width > 10 && height > 10 && top > 0 && left > 0) {  //当宽度高度小于10的时候停止缩小,当 x y 坐标小于0时停止移动
-                setInsideData({ ...insideData, top, left, width, height })
-                adsorbGuide({ top, left, width, height })
+                let newStyle = { top, left, width, height }
 
-                // 防抖
-                if (ref.current) clearTimeout(ref.current)
-                ref.current = setTimeout(() => {
-                    element.style = { ...insideData, top, left, width, height }
-                    setComponentData(element, index)
-                }, 100)
-
+                if (myAuth.state.componentData.length <= 1) {  //只存在一个组件的时候调用
+                    setInsideData({ ...insideData, ...newStyle })
+                    setMainInsideData({ ...newStyle })
+                    // 防抖
+                    if (ref.current) clearTimeout(ref.current)
+                    ref.current = setTimeout(() => {
+                        // element.style = { ...insideData, ...newStyle }
+                        setComponentData({ ...element, style: { ...insideData, ...newStyle } }, index)
+                    }, 100)
+                } else {
+                    adsorbGuide({ ...newStyle })
+                }
             }
         }
 
         //吸附功能
         const adsorbGuide = (data: any) => {
-            let ADSORB_SPACING = 10 //吸附界限
+            let ADSORB_SPACING = 5 //吸附界限
             let { top: stop, left: sleft, width: swidth, height: sheight } = data;
             let { id: sid } = myAuth.state.selectComponent;
             if (myAuth.state.componentData.length > 1) {
@@ -119,13 +124,14 @@ const Control: FC<ControlProps> = (props: ControlProps) => {
                         if (Math.abs(sleft - (left + width)) < ADSORB_SPACING) {
                             sleft = left + width
                         }
-                        setInsideData({ ...insideData, top: stop, left: sleft, width: swidth, height: sheight })
-
+                        let newStyle = { top: stop, left: sleft, width: swidth, height: sheight }
+                        setInsideData({ ...insideData, ...newStyle })
+                        setMainInsideData({ ...newStyle })
                         // 防抖
                         if (ref.current) clearTimeout(ref.current)
                         ref.current = setTimeout(() => {
-                            element.style = { ...insideData, top: stop, left: sleft, width: swidth, height: sheight }
-                            setComponentData(element, index)
+                            // element.style = { ...insideData, ...newStyle }
+                            setComponentData({ ...element, style: { ...insideData, ...newStyle } }, index)
                         }, 100)
                     }
                 }
@@ -168,9 +174,9 @@ const Control: FC<ControlProps> = (props: ControlProps) => {
                 {moveList.map((val) => {
                     return <div key={val.circleName} className={`circle ${val.circleName}`} style={getStyle(val.style)} onMouseDown={(e) => relocation(e, val.circleName)} ></div>
                 })}
-                {guideList.map((val) => {
+                {/* {guideList.map((val) => {
                     return <div key={val.guideName} className={`guide ${val.guideName}`} style={getStyle(val.style)}></div>
-                })}
+                })} */}
             </div>
         </div>
     )
