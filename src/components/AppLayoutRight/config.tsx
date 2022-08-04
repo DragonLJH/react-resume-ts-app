@@ -1,3 +1,4 @@
+import iconConfig from "../../utils/icon-config";
 
 // 类型导出需要添加 declare 
 export declare type commomType = {
@@ -11,7 +12,17 @@ export const commomStyle: any = {
     top: { inputType: "inputNumber", label: "y" },
     left: { inputType: "inputNumber", label: "x" },
     width: { inputType: "inputNumber", label: "宽" },
-    height: { inputType: "inputNumber", label: "高" },
+    height: { inputType: "inputNumber", label: "高" }
+}
+export const iconStyle: any = {
+    icon: {
+        inputType: "select", label: "Icon", chidren: [
+            { value: "", label: "", },
+            ...Object.keys(iconConfig).map((val: any) => {
+                return { value: val, label: val, }
+            })
+        ]
+    }
 }
 // 配置样式
 export const configStyle: any = {
@@ -37,7 +48,10 @@ export const commomAttribute: any = {
 // 配置属性
 // 注意：(select + componentId) 区分可能会相同的属性
 export const configAttribute: any = {
-    select0: { ...commomAttribute, },
+    select0: {
+        ...commomAttribute,
+        ...iconStyle
+    },
     select1: {
         ...commomAttribute,
         orientation: {
