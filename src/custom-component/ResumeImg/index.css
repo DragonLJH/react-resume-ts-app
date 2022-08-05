@@ -1,4 +1,5 @@
-.rootResumeImg {  /* 通过绝对固定position来实现rootResumeImg让整页面充满 */
+.rootResumeImg {
+    /* 通过绝对固定position来实现rootResumeImg让整页面充满 */
     position: absolute;
     top: 0px;
     left: 0px;
@@ -9,4 +10,8 @@
 .ResumeImg {
     width: 100%;
     height: 100%;
+}
+
+.ResumeImg.circle {
+    border-radius: 50%;
 }

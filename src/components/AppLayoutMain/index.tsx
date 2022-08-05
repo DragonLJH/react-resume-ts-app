@@ -5,12 +5,13 @@ import componentList from "../../custom-component/component-list"
 import Control from "./Control";
 import commonContext from "../../commonContext";
 import { getStyle, HEADER_Y, SIDER_LEFT_X } from "../../utils";
+import { getID } from "../../utils/globalID";
 
-var id = 0;
+// var id = 0;
 
-function getID() {
-    return id++
-}
+// function getID() {
+//     return id++
+// }
 
 
 

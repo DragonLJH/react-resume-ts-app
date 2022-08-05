@@ -1,7 +1,6 @@
 import { FC, useEffect, useState } from 'react';
-import iconConfig from "../../utils/icon-config";
 
-import { Select, Input, InputNumber, Upload, Image } from 'antd';
+import { Select, Input, InputNumber, Upload, Image, Radio } from 'antd';
 const { Option } = Select;
 const { TextArea } = Input;
 
@@ -23,26 +22,28 @@ const formTypeConfig: any = {
     "inputNumber": (val: any, set: any) => <InputNumber min={1} value={val} onChange={set} />,
     "select": (val: any, set: any, props: Array<SelectObj>) => {
         return (<Select value={val} onChange={set} >
-            {props.map((val: SelectObj) => {
-                return <Option key={val.value} value={val.value}>{val.label}</Option>
+            {props.map((item: SelectObj) => {
+                return <Option key={item.value} value={item.value}>{item.label}</Option>
             })}
         </Select>)
     },
-    // "selectIcon": (val: any, set: any, props: Array<SelectObj>) => {
-    //     return (<Select value={val} onChange={set} >
-    //         {props.map((val: SelectObj) => {
-    //             return (<Option key={val.value} value={val.value}>
-    //                 {iconConfig[val.value]()} {val.label}
-    //             </Option>)
-    //         })}
-    //     </Select>)
-    // },
     "Upload": (val: any, set: any) => {
         return (
-            <Upload maxCount={1} onChange={(e) => { set(e.file.response) }}
+            <Upload maxCount={1} onChange={(e) => { if (e.file.status === "done") set(e.file.response) }} onRemove={(file: any) => set("")}
                 name="uploadRotationImg" action="http://150.158.96.29:8781/rotation/uploadRotationImg" listType="picture">
                 <Image preview={false} src={val} fallback="http://150.158.96.29:8082/commom-img/error.png" />
             </Upload>
+        )
+    },
+    "radio": (val: any, set: any, props: Array<SelectObj>) => {
+        return (
+            <>
+                <Radio.Group onChange={set} defaultValue={val}>
+                    {props.map((item: SelectObj) => {
+                        return <Radio.Button defaultChecked key={item.value} value={item.value}>{item.label}</Radio.Button>
+                    })}
+                </Radio.Group>
+            </>
         )
     }
 

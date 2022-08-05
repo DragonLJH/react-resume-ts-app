@@ -1,4 +1,4 @@
-import iconConfig from "../../utils/icon-config";
+import { iconConfig } from "../../utils/icon-config";
 
 // 类型导出需要添加 declare 
 export declare type commomType = {
@@ -71,7 +71,34 @@ export const configAttribute: any = {
     },
     select2: {
         ...commomAttribute,
-        src: { inputType: "Upload", label: "上传图片", }
+        src: { inputType: "Upload", label: "上传图片", },
+        circle: {
+            inputType: "radio", label: "圆", chidren: [
+                { value: "1", label: "是", },
+                { value: "", label: "否", },
+            ]
+        }
+    },
+    select3: {
+        ...commomAttribute,
+        icon: { ...iconAttribute.icon, label: "主标题Icon" },
+        title: { inputType: "input", label: "主标题" },
+        avatar: { ...iconAttribute.icon, label: "次标题Icon" },
+        secondaryTitle: { inputType: "input", label: "次标题" },
+        description: { inputType: "input", label: "内容" },
+        cover: { inputType: "Upload", label: "上传封面图", },
+    },
+    select4: {
+        ...commomAttribute,
+        ...iconAttribute,
+        type: {
+            inputType: "select", label: "类型", chidren: [
+                { value: "line", label: "进度条", },
+                { value: "circle", label: "进度圈", },
+                { value: "dashboard", label: "仪表盘", },
+            ]
+        },
+        percent: { inputType: "inputNumber", label: "百分比" },
     },
 
 }
