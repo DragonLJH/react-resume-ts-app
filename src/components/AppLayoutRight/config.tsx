@@ -90,6 +90,7 @@ export const configAttribute: any = {
     },
     select4: {
         ...commomAttribute,
+        ...iconAttribute,
         type: {
             inputType: "select", label: "类型", chidren: [
                 { value: "line", label: "进度条", },

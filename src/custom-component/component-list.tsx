@@ -82,6 +82,7 @@ const componentList: Array<any> = [
             text: "内容",
             type: "line",
             percent: 0,
+            icon: "",
         },
         style: {
             width: 50,
