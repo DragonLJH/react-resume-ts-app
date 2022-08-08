@@ -4,6 +4,13 @@ import ResumeImg from "./ResumeImg"
 import ResumeCard from "./ResumeCard"
 import ResumeProgress from "./ResumeProgress"
 
+export const mateComponent = new Map()
+mateComponent.set(0, { component: (data: any) => <ResumeText {...data} /> })
+mateComponent.set(1, { component: (data: any) => <ResumeDivider {...data} /> })
+mateComponent.set(2, { component: (data: any) => <ResumeImg {...data} /> })
+mateComponent.set(3, { component: (data: any) => <ResumeCard {...data} /> })
+mateComponent.set(4, { component: (data: any) => <ResumeProgress {...data} /> })
+
 const componentList: Array<any> = [
     {
         component: (data: any) => <ResumeText {...data} />,
@@ -14,13 +21,13 @@ const componentList: Array<any> = [
             icon: ""
         },
         style: {
-            width: 50,
-            height: 22,
+            width: 80,
+            height: 30,
             fontSize: 14,
             fontWeight: 100,
-            backgroundColor: null,
+            backgroundColor: "#fff",
             textAlign: 'center',
-            color: null,
+            color: "#000",
         },
     },
     {
@@ -34,8 +41,8 @@ const componentList: Array<any> = [
             type: "horizontal"
         },
         style: {
-            width: 50,
-            height: 22,
+            width: 300,
+            height: 30,
             fontSize: 14,
             fontWeight: 100,
             backgroundColor: 'rgba(0,0,0,0)',
@@ -51,8 +58,8 @@ const componentList: Array<any> = [
             circle: "",
         },
         style: {
-            width: 50,
-            height: 22,
+            width: 300,
+            height: 300,
         },
     },
     {
@@ -69,8 +76,8 @@ const componentList: Array<any> = [
             cover: "",
         },
         style: {
-            width: 50,
-            height: 22,
+            width: 300,
+            height: 180,
             textAlign: 'left',
         },
     },
@@ -85,8 +92,8 @@ const componentList: Array<any> = [
             icon: "",
         },
         style: {
-            width: 50,
-            height: 22,
+            width: 300,
+            height: 70,
             fontSize: 14,
             fontWeight: 100,
             backgroundColor: null,

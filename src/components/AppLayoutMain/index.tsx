@@ -1,6 +1,7 @@
 import { FC, useContext, useEffect, useState } from 'react';
 import './index.css';
-
+import { DownloadOutlined } from '@ant-design/icons';
+import { Button } from 'antd';
 import componentList from "../../custom-component/component-list"
 import Control from "./Control";
 import commonContext from "../../commonContext";
@@ -90,17 +91,22 @@ const AppLayoutMain: FC = () => {
         setMainInsideData(data)
     }
 
-
+    const download = () => {
+        localStorage.setItem("test1", JSON.stringify(myAuth.state.componentData))
+    }
 
     return (
-        <div className="AppLayoutMain" onDrop={useMyDrop} onDragOver={myDragOver} onMouseDown={() => myAuth.changeSelect()}>
-            {myAuth.state.componentData.map((item: any, index: number) => {
-                return <Control setMainInsideData={setMainInsideDataFun} setComponentData={setComponentData} element={item} index={index} activeComponent={myAuth.state.selectComponent.id === item.id} key={item.id}>{item.component(item.propValue)}</Control>
-            })}
+        <div className="AppLayoutMain">
+            <Button onClick={download} className="download" type="primary" icon={<DownloadOutlined />}></Button>
+            <div className="AppLayoutMainEdit" onDrop={useMyDrop} onDragOver={myDragOver} onMouseDown={() => myAuth.changeSelect()}>
+                {myAuth.state.componentData.map((item: any, index: number) => {
+                    return <Control setMainInsideData={setMainInsideDataFun} setComponentData={setComponentData} element={item} index={index} activeComponent={myAuth.state.selectComponent.id === item.id} key={item.id}>{item.component(item.propValue)}</Control>
+                })}
 
-            {guideList.map((val) => {
-                return <div key={val.guideName} className={`guide ${val.guideName} ${myAuth.state.selectComponentIndex !== -1 ? 'active' : ''}`} style={getStyle(val.style)}></div>
-            })}
+                {guideList.map((val) => {
+                    return <div key={val.guideName} className={`guide ${val.guideName} ${myAuth.state.selectComponentIndex !== -1 ? 'active' : ''}`} style={getStyle(val.style)}></div>
+                })}
+            </div>
         </div>
     )
 };

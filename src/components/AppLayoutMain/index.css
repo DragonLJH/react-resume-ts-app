@@ -1,4 +1,13 @@
 .AppLayoutMain {
+    position: relative;
+    width: calc(100% - 20px);
+    height: calc(100% - 20px);
+    margin: 10px;
+    background-color: #eee;
+
+}
+
+.AppLayoutMainEdit {
     /* width: calc(100% - 20px);
     height: calc(100% - 20px); */
     width: 100%;
@@ -6,24 +15,31 @@
     overflow: auto;
     position: relative;
     /* margin: 10px; */
-    background-color: #eee;
+    background-color: #fff;
 }
 
-.AppLayoutMain>.guide {
+.AppLayoutMainEdit>.guide {
     position: absolute;
 }
 
-.AppLayoutMain>.guide.active {
+.AppLayoutMainEdit>.guide.active {
     outline: solid 1px #40a9ff;
 }
 
-.AppLayoutMain>.guideT, .AppLayoutMain>.guideB {
+.AppLayoutMainEdit>.guideT, .AppLayoutMainEdit>.guideB {
     width: 100%;
     transform: scaleY(0.5);
 }
 
 
-.AppLayoutMain>.guideL, .AppLayoutMain>.guideR {
+.AppLayoutMainEdit>.guideL, .AppLayoutMainEdit>.guideR {
     height: 100%;
     transform: scaleX(0.5);
+}
+
+.download{
+    position: absolute;
+    right: 0px;
+    top: 0px;
+    z-index: 999;
 }

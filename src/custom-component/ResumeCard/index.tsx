@@ -22,15 +22,15 @@ const ResumeCard: FC<ResumeCardProps> = (props: ResumeCardProps) => {
     if (title) mainHead['title'] = <ResumeText {...{ text: title, icon }} />
     if (cover) mainHead['cover'] = <img src={cover} />
     if (avatar) metaHead['avatar'] = <IconComponent name={avatar ?? ''} />
-    if (description) metaHead['description'] = <p><ResumeText text={description} /></p>
+    if (description) metaHead['description'] = <div><ResumeText text={description} /></div>
 
     return (
         <Card
             headStyle={{ height: "20%" }}
-            bodyStyle={{ height: "80%" }}
+            bodyStyle={{ height: "calc(80% - 48px)" }}
             className="ResumeCard" {...mainHead}
         >
-            {text ? <p><ResumeText {...{ text }} /></p> : ""}
+            {text ? <div style={{ marginBottom: "10px" }}><ResumeText {...{ text }} /></div> : ""}
             <Meta
                 {...metaHead}
                 title={<ResumeText {...{ text: secondaryTitle ?? "" }} />}

@@ -1,6 +1,7 @@
 
-export const HEADER_Y = 100  // 头部高度
-export const SIDER_LEFT_X = 200  // 左边宽度
+export const MAIN_MARGIN = 10
+export const HEADER_Y = 100 + MAIN_MARGIN // 头部高度
+export const SIDER_LEFT_X = 200 + MAIN_MARGIN // 左边宽度
 
 
 export const getStyle = (data: any) => {

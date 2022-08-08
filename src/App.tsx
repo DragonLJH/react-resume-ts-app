@@ -2,6 +2,7 @@ import { FC, useReducer } from 'react';
 import MyContext from "./commonContext";
 import { Layout } from 'antd';
 import './App.css';
+import AppHeader from "./components/AppHeader"
 import AppLayoutLeft from "./components/AppLayoutLeft/index"
 import AppLayoutMain from "./components/AppLayoutMain/index"
 import AppLayoutRight from "./components/AppLayoutRight/index"
@@ -55,6 +56,7 @@ const App: FC = () => {
       <MyContext.Provider value={useAuth()}>
         <Layout>
           <Header className="app-header">
+            <AppHeader />
           </Header>
           <Layout className="app-layout">
             <Sider className="app-layout-left">

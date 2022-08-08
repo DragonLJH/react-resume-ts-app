@@ -1,6 +1,5 @@
-.Control { 
+.Control {
     position: absolute;
-    background-color: #ddd;
 }
 
 .Control>.moveComponent.active {

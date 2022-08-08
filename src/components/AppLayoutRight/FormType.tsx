@@ -1,6 +1,5 @@
 import { FC, useEffect, useState } from 'react';
-
-import { Select, Input, InputNumber, Upload, Image, Radio } from 'antd';
+import { Select, Input, InputNumber, Upload, Image, Radio, Cascader } from 'antd';
 const { Option } = Select;
 const { TextArea } = Input;
 
@@ -45,6 +44,18 @@ const formTypeConfig: any = {
                 </Radio.Group>
             </>
         )
+    },
+    "Cascader": (val: any, set: any, props: Array<SelectObj>) => {
+        const onChange = (value: any) => {
+            if (value) {
+                set(value[value.length - 1])
+            } else {
+                set("")
+            }
+        }
+        const onSearch = (value: string) => value
+        const displayRender = (labels: string[]) => labels[labels.length - 1];
+        return <Cascader expandTrigger="hover" value={val} showSearch options={props} onSearch={onSearch} onChange={onChange} displayRender={displayRender} />
     }
 
 }
