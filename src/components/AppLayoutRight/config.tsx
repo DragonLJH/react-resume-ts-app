@@ -1,4 +1,6 @@
 import { iconConfig } from "../../utils/icon-config";
+import colorConfig from "../../utils/color-config"
+const { colors } = colorConfig
 
 // 类型导出需要添加 declare 
 export declare type commomType = {
@@ -27,10 +29,22 @@ export const iconAttribute: any = {
 // 配置样式
 export const configStyle: any = {
     ...commomStyle,
-    backgroundColor: { inputType: "input", label: "背景颜色" },
-    color: { inputType: "input", label: "字体颜色" },
-    fontSize: { inputType: "input", label: "字体大小" },
-    fontWeight: { inputType: "input", label: "字体权重" },
+    backgroundColor: { inputType: "Cascader", label: "背景颜色", chidren: [...colors] },
+    color: { inputType: "Cascader", label: "字体颜色", chidren: [...colors] },
+    fontSize: { inputType: "inputNumber", label: "字体大小" },
+    fontWeight: {
+        inputType: "select", label: "字体权重", chidren: [
+            { value: "100", label: "100", }, 
+            { value: "200", label: "200", }, 
+            { value: "300", label: "300", }, 
+            { value: "400", label: "400", }, 
+            { value: "500", label: "500", }, 
+            { value: "600", label: "600", }, 
+            { value: "700", label: "700", }, 
+            { value: "800", label: "800", }, 
+            { value: "900", label: "900", }, 
+        ]
+    },
     textAlign: {
         inputType: "select", label: "文本对齐", chidren: [
             { value: "left", label: "左对齐", },

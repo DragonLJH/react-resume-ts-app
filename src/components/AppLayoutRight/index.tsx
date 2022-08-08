@@ -1,11 +1,12 @@
 import React, { FC, useContext, useEffect, useMemo, useState } from 'react';
-import { Form, Empty, Divider } from 'antd';
+import { Form, Empty, Divider, Collapse } from 'antd';
 import './index.css';
 import commonContext from "../../commonContext";
 import type { commomType } from "./config"; // 自定义表单控件
 import { configStyle, configAttribute } from "./config";    // 对应配置属性 {inputType , label }
 import FormType from "./FormType";
 
+const { Panel } = Collapse;
 const formItemLayout = {
     labelCol: { span: 7 },
     wrapperCol: { span: 15 },
@@ -54,26 +55,30 @@ const AppLayoutRight: FC = () => {
 
         return (
             <div className="AppLayoutRight">
-                <Divider>样式</Divider>
-                <Form  {...formItemLayout} form={formStyle} onValuesChange={onValuesStyleChange} size="small" labelWrap>
-                    {newStyleKeys.map((item: commomType, index: number) => {
-                        return (
-                            <Form.Item name={item.name} key={index} label={item.label}>
-                                <FormType {...item} />
-                            </Form.Item>
-                        )
-                    })}
-                </Form>
-                <Divider>属性</Divider>
-                <Form {...formItemLayout} form={formAttribute} onValuesChange={onValuesAttributeChange} size="small" labelWrap>
-                    {newPropValueKeys.map((item: commomType, index: number) => {
-                        return (
-                            <Form.Item name={item.name} key={index} label={item.label}>
-                                <FormType {...item} />
-                            </Form.Item>
-                        )
-                    })}
-                </Form>
+                <Collapse bordered={false} defaultActiveKey={['1', '2']}>
+                    <Panel header="样式" key="1">
+                        <Form  {...formItemLayout} form={formStyle} onValuesChange={onValuesStyleChange} size="small" labelWrap>
+                            {newStyleKeys.map((item: commomType, index: number) => {
+                                return (
+                                    <Form.Item name={item.name} key={index} label={item.label}>
+                                        <FormType {...item} />
+                                    </Form.Item>
+                                )
+                            })}
+                        </Form>
+                    </Panel>
+                    <Panel header="属性" key="2">
+                        <Form {...formItemLayout} form={formAttribute} onValuesChange={onValuesAttributeChange} size="small" labelWrap>
+                            {newPropValueKeys.map((item: commomType, index: number) => {
+                                return (
+                                    <Form.Item name={item.name} key={index} label={item.label}>
+                                        <FormType {...item} />
+                                    </Form.Item>
+                                )
+                            })}
+                        </Form>
+                    </Panel>
+                </Collapse>
             </div>
         )
     }
