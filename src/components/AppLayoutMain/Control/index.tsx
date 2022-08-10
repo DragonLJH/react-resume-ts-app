@@ -124,6 +124,12 @@ const Control: FC<ControlProps> = (props: ControlProps) => {
                         if (Math.abs(sleft - (left + width)) < ADSORB_SPACING) {
                             sleft = left + width
                         }
+                        if (Math.abs((stop + sheight) - (top + height)) < ADSORB_SPACING) {
+                            stop = top + height - sheight
+                        }
+                        if (Math.abs((sleft + swidth) - (left + width)) < ADSORB_SPACING) {
+                            sleft = left + width - swidth
+                        }
                         let newStyle = { top: stop, left: sleft, width: swidth, height: sheight }
                         setInsideData({ ...insideData, ...newStyle })
                         setMainInsideData({ ...newStyle })

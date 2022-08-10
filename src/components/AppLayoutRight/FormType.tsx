@@ -55,7 +55,10 @@ const formTypeConfig: any = {
         }
         const onSearch = (value: string) => value
         const displayRender = (labels: string[]) => labels[labels.length - 1];
-        return <Cascader expandTrigger="hover" value={val} showSearch options={props} onSearch={onSearch} onChange={onChange} displayRender={displayRender} />
+        const dropdownRender = (menus: any) => {
+            return <span>{menus}</span>
+        }
+        return <Cascader dropdownRender={dropdownRender} expandTrigger="hover" value={val} showSearch options={props} onSearch={onSearch} onChange={onChange} displayRender={displayRender} />
     }
 
 }
