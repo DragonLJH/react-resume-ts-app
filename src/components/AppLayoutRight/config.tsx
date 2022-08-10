@@ -45,6 +45,7 @@ export const configStyle: any = {
             { value: "900", label: "900", }, 
         ]
     },
+    border: { inputType: "input", label: "边框" },
     textAlign: {
         inputType: "select", label: "文本对齐", chidren: [
             { value: "left", label: "左对齐", },
