@@ -1,7 +1,7 @@
 import { FC, useContext, useEffect, useState, useRef } from 'react';
 import './index.css';
-import { DownloadOutlined } from '@ant-design/icons';
-import { Button } from 'antd';
+import { DownloadOutlined, DeleteOutlined } from '@ant-design/icons';
+import { Button, Modal, Space } from 'antd';
 import componentList from "../../custom-component/component-list"
 import Control from "./Control";
 import commonContext from "../../commonContext";
@@ -28,6 +28,8 @@ const AppLayoutMain: FC = () => {
     const [range, setRange] = useState({ top: 0, left: 0, width: 0, height: 0 }) //选中范围
 
     const rangeRef = useRef<NodeJS.Timeout | null>(null) //useRef 用来存储之前的定时器 
+
+    const [preview, setPreview] = useState(false);
 
     useEffect(() => {
         if (selectComponentIndex !== -1) {
@@ -77,6 +79,7 @@ const AppLayoutMain: FC = () => {
 
     const myMouseDown = (e: any) => {
         myAuth.changeSelect()
+        setRange({ top: 0, left: 0, width: 0, height: 0 })
         // 初始节点
         let { clientX: InitialValueX, clientY: InitialValueY }: { clientX: number, clientY: number } = e
 
@@ -116,13 +119,30 @@ const AppLayoutMain: FC = () => {
         let res: any = []
         if (rangeRef.current) clearTimeout(rangeRef.current)
         rangeRef.current = setTimeout(() => {
-            let len = componentData.length
-            for (let i = 0; i < len; i++) {
+            // 计算出选中的组件
+            for (let i = 0; i < componentData.length; i++) {
                 let { top, left, width, height } = componentData[i].style
                 if (minX < left && left + width < maxX && minY < top && top + height < maxY) {
                     res.push(componentData[i])
                 }
             }
+            // 根据选中的组件来调整选中框
+            let rangeTop1: number = 0, rangeLeft1: number = 0, rangeTop2: number = 0, rangeLeft2: number = 0;
+            res.forEach((val: any, index: number) => {
+                let { top, left, width, height } = val.style
+                if (!index) {
+                    rangeTop1 = top
+                    rangeLeft1 = left
+                    rangeTop2 = top + height
+                    rangeLeft2 = left + width
+                } else {
+                    rangeTop1 = rangeTop1 > top ? top : rangeTop1;
+                    rangeTop2 = rangeTop2 > top + height ? rangeTop2 : top + height;
+                    rangeLeft1 = rangeLeft1 > left ? left : rangeLeft1;
+                    rangeLeft2 = rangeLeft2 > left + width ? rangeLeft2 : left + width;
+                }
+            })
+            setRange({ top: rangeTop1, left: rangeLeft1, width: rangeLeft2 - rangeLeft1, height: rangeTop2 - rangeTop1 })
             // console.log(maxX, minX, maxY, minY)
             console.log(res)
         }, 100)
@@ -153,10 +173,26 @@ const AppLayoutMain: FC = () => {
     const download = () => {
         localStorage.setItem("test1", JSON.stringify(myAuth.state.componentData))
     }
+    const delSelect = () => {  //删除选中组件
+        if (selectComponentIndex !== -1) {
+            myAuth.changeSelect()
+            let newComponentData = [...myAuth.state.componentData]
+            newComponentData.splice(selectComponentIndex, 1)
+            myAuth.updataComponentData(newComponentData)
+        }
+    }
 
     return (
         <div className="AppLayoutMain">
-            <div className="download" ><Button onClick={download} type="primary" icon={<DownloadOutlined />}></Button></div>
+            <div className="operation">
+                <Space align="center">
+                    <Button type="primary" onClick={() => setPreview(true)}>
+                        预览
+                    </Button>
+                    <Button onClick={delSelect} type="primary" icon={<DeleteOutlined />}></Button>
+                    <Button onClick={download} type="primary" icon={<DownloadOutlined />}></Button>
+                </Space>
+            </div>
 
             <div className="AppLayoutMainEdit" onDrop={useMyDrop} onDragOver={myDragOver} onMouseDown={myMouseDown}>
                 <div className="range" style={getStyle({ ...range })}></div>
@@ -168,6 +204,19 @@ const AppLayoutMain: FC = () => {
                     return <div key={val.guideName} className={`guide ${val.guideName} ${myAuth.state.selectComponentIndex !== -1 ? 'active' : ''}`} style={getStyle(val.style)}></div>
                 })}
             </div>
+            <Modal
+                centered
+                closable={false}
+                visible={preview}
+                onCancel={() => setPreview(false)}
+                width={1000}  
+                bodyStyle={{ height: "800px", position: "relative" }}
+            >
+                <div className="modal-div"></div>
+                {myAuth.state.componentData.map((item: any, index: number) => {
+                    return <Control setMainInsideData={setMainInsideDataFun} setComponentData={setComponentData} element={item} index={index} activeComponent={false} key={item.id}>{item.component(item.propValue)}</Control>
+                })}
+            </Modal>
         </div>
     )
 };
