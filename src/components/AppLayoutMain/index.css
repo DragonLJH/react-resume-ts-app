@@ -37,9 +37,25 @@
     transform: scaleX(0.5);
 }
 
-.download{
+.AppLayoutMain>.operation {
     position: absolute;
     right: 0px;
-    top: 0px;
+    top: -35px;
     z-index: 999;
+}
+
+
+.AppLayoutMainEdit>.range {
+    position: absolute;
+    outline: solid 1px #40a9ff;
+}
+
+.modal-div{
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    z-index: 999;
+    top: 0px;
+    left: 0px;
+
 }

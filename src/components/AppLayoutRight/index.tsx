@@ -39,6 +39,7 @@ const AppLayoutRight: FC = () => {
         let newPropValueKeys: Array<commomType> = propValueKeys.map((name) => {
             return { ...selectConfigAttribute[name], name }
         })
+        if (componentId === 5) newPropValueKeys = []
         const onValuesStyleChange = (changedValues: any, allValues: any) => { //字段值更新时触发回调事件(changedValues：修改的字段，allValues：所有值) 
             setComponentData({ ...newSelectComponent, style: allValues }, index)
         };
