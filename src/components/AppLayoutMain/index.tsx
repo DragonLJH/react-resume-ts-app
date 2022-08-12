@@ -31,6 +31,8 @@ const AppLayoutMain: FC = () => {
 
     const [preview, setPreview] = useState(false);
 
+    const [makeUpProps, setMakeUpProps] = useState({ resumeCompose: [], indexs: [] });
+
     useEffect(() => {
         if (selectComponentIndex !== -1) {
             setMainInsideData(style)
@@ -111,24 +113,26 @@ const AppLayoutMain: FC = () => {
         document.addEventListener("mouseup", up);
     }
 
+    // 选中框
     const rangeCheck = (x1: number, y1: number, x2: number, y2: number) => {
         let maxX = x1 > x2 ? x1 : x2
         let minX = x1 < x2 ? x1 : x2
         let maxY = y1 > y2 ? y1 : y2
         let minY = y1 < y2 ? y1 : y2
-        let res: any = []
+        let res: any = { resumeCompose: [], indexs: [] }
         if (rangeRef.current) clearTimeout(rangeRef.current)
         rangeRef.current = setTimeout(() => {
             // 计算出选中的组件
             for (let i = 0; i < componentData.length; i++) {
                 let { top, left, width, height } = componentData[i].style
                 if (minX < left && left + width < maxX && minY < top && top + height < maxY) {
-                    res.push(componentData[i])
+                    res.indexs.unshift(i)
+                    res.resumeCompose.push(componentData[i])
                 }
             }
             // 根据选中的组件来调整选中框
             let rangeTop1: number = 0, rangeLeft1: number = 0, rangeTop2: number = 0, rangeLeft2: number = 0;
-            res.forEach((val: any, index: number) => {
+            res.resumeCompose.forEach((val: any, index: number) => {
                 let { top, left, width, height } = val.style
                 if (!index) {
                     rangeTop1 = top
@@ -143,6 +147,7 @@ const AppLayoutMain: FC = () => {
                 }
             })
             setRange({ top: rangeTop1, left: rangeLeft1, width: rangeLeft2 - rangeLeft1, height: rangeTop2 - rangeTop1 })
+            setMakeUpProps(res)
             // console.log(maxX, minX, maxY, minY)
             console.log(res)
         }, 100)
@@ -151,13 +156,6 @@ const AppLayoutMain: FC = () => {
     }
 
     /*------------------------------------------------------------------------------*/
-
-    // const ControlsComponent = () => {
-
-    //     myAuth.state.componentData.map((item: any, index: number) => {
-    //         return <Control setComponentData={setComponentData} element={item} index={index} activeComponent={myAuth.state.selectComponent.id === item.id} key={item.id}>{item.component()}</Control>
-    //     })
-    // }  
     const setComponentData = (data: any, index: number) => {
         let newComponentData = [...myAuth.state.componentData]
         newComponentData.splice(index, 1, data)
@@ -170,9 +168,11 @@ const AppLayoutMain: FC = () => {
         setMainInsideData(data)
     }
 
+    /*------------------------------------------------------------------------------*/
     const download = () => {
         localStorage.setItem("test1", JSON.stringify(myAuth.state.componentData))
     }
+
     const delSelect = () => {  //删除选中组件
         if (selectComponentIndex !== -1) {
             myAuth.changeSelect()
@@ -182,10 +182,65 @@ const AppLayoutMain: FC = () => {
         }
     }
 
+    const makeUp = () => {
+        if (makeUpProps.resumeCompose.length > 1) {
+            new Promise((resolve) => {
+                // 先把组合的组件删除再生产组合组件
+                let newComponentData = [...myAuth.state.componentData]
+                makeUpProps.indexs.forEach((val: number) => {
+                    newComponentData.splice(val, 1)
+                })
+                myAuth.updataComponentData(newComponentData)
+                resolve(true)
+            }).then(() => {
+                let componentItem = componentList[5]
+                componentItem.style = range
+                componentItem.propValue = getNewComposeProps(range, makeUpProps)
+                // console.log("makeUp", getNewComposeProps(range, makeUpProps))
+                myAuth.increment({ ...componentItem, id: "component" + getID() })
+            })
+
+        }
+
+        setRange({ top: 0, left: 0, width: 0, height: 0 })
+        // console.log("makeUp", { ...componentItem, id: "component" + getID() })
+    }
+
+    // 计算组合后组件的样式百分比（top, left, width, height）
+    const getNewComposeProps = (style: any, props: any) => {
+        let { top, left, width, height } = style
+        props.resumeCompose = props.resumeCompose.map((item: any) => {
+            let { top: ist, left: isl, width: isw, height: ish } = item.style
+            ist = (((ist - top) / height) * 100) + "%"
+            isl = (((isl - left) / width) * 100) + "%"
+            ish = ((ish / height) * 100) + "%"
+            isw = ((isw / width) * 100) + "%"
+            item.style = { ...item.style, top: ist, left: isl, width: isw, height: ish }
+            return item
+        })
+        return props
+    }
+
+    // 
+    const breakUp = () => {
+        if (selectComponent.componentId === 5) {
+            let flagSelectComponent = { ...selectComponent }
+            let { top, left, width, height } = flagSelectComponent.style
+            console.log("breakUp", flagSelectComponent, selectComponentIndex)
+
+        }
+    }
+
     return (
         <div className="AppLayoutMain">
             <div className="operation">
                 <Space align="center">
+                    <Button type="primary" onClick={breakUp}>
+                        拆分
+                    </Button>
+                    <Button type="primary" onClick={makeUp}>
+                        组合
+                    </Button>
                     <Button type="primary" onClick={() => setPreview(true)}>
                         预览
                     </Button>
@@ -197,11 +252,15 @@ const AppLayoutMain: FC = () => {
             <div className="AppLayoutMainEdit" onDrop={useMyDrop} onDragOver={myDragOver} onMouseDown={myMouseDown}>
                 <div className="range" style={getStyle({ ...range })}></div>
                 {myAuth.state.componentData.map((item: any, index: number) => {
-                    return <Control setMainInsideData={setMainInsideDataFun} setComponentData={setComponentData} element={item} index={index} activeComponent={myAuth.state.selectComponent.id === item.id} key={item.id}>{item.component(item.propValue)}</Control>
+                    return (<Control setMainInsideData={setMainInsideDataFun} setComponentData={setComponentData}
+                        element={item} index={index} activeComponent={myAuth.state.selectComponent.id === item.id} key={item.id}>
+                        {item.component(item.propValue)}
+                    </Control>)
                 })}
 
                 {guideList.map((val) => {
-                    return <div key={val.guideName} className={`guide ${val.guideName} ${myAuth.state.selectComponentIndex !== -1 ? 'active' : ''}`} style={getStyle(val.style)}></div>
+                    return (<div key={val.guideName} className={`guide ${val.guideName} ${myAuth.state.selectComponentIndex !== -1 ? 'active' : ''}`}
+                        style={getStyle(val.style)}></div>)
                 })}
             </div>
             <Modal
@@ -209,7 +268,7 @@ const AppLayoutMain: FC = () => {
                 closable={false}
                 visible={preview}
                 onCancel={() => setPreview(false)}
-                width={1000}  
+                width={1000}
                 bodyStyle={{ height: "800px", position: "relative" }}
             >
                 <div className="modal-div"></div>

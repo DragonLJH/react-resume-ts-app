@@ -3,6 +3,7 @@ import ResumeDivider from "./ResumeDivider"
 import ResumeImg from "./ResumeImg"
 import ResumeCard from "./ResumeCard"
 import ResumeProgress from "./ResumeProgress"
+import ResumeCompose from "./ResumeCompose"
 
 export const mateComponent = new Map()
 mateComponent.set(0, { component: (data: any) => <ResumeText {...data} /> })
@@ -100,6 +101,18 @@ const componentList: Array<any> = [
             backgroundColor: null,
             textAlign: 'center',
             color: null,
+        },
+    },
+    {
+        component: (data: any) => <ResumeCompose {...data} />,
+        componentId: 5,
+        label: "组合",
+        propValue: [],
+        style: {
+            top: 0,
+            left: 0,
+            width: 0,
+            height: 0,
         },
     },
 
