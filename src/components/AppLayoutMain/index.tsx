@@ -173,11 +173,11 @@ const AppLayoutMain: FC = () => {
         localStorage.setItem("test1", JSON.stringify(myAuth.state.componentData))
     }
 
-    const delSelect = () => {  //删除选中组件
+    const delSelect = (index = selectComponentIndex) => {  //删除选中组件
         if (selectComponentIndex !== -1) {
             myAuth.changeSelect()
             let newComponentData = [...myAuth.state.componentData]
-            newComponentData.splice(selectComponentIndex, 1)
+            newComponentData.splice(index, 1)
             myAuth.updataComponentData(newComponentData)
         }
     }
@@ -201,14 +201,13 @@ const AppLayoutMain: FC = () => {
             })
 
         }
-
         setRange({ top: 0, left: 0, width: 0, height: 0 })
         // console.log("makeUp", { ...componentItem, id: "component" + getID() })
     }
 
     // 计算组合后组件的样式百分比（top, left, width, height）
     const getNewComposeProps = (style: any, props: any) => {
-        let { top, left, width, height } = style
+        let { top, left, width, height }: { top: number, left: number, width: number, height: number } = style
         props.resumeCompose = props.resumeCompose.map((item: any) => {
             let { top: ist, left: isl, width: isw, height: ish } = item.style
             ist = (((ist - top) / height) * 100) + "%"
@@ -221,13 +220,36 @@ const AppLayoutMain: FC = () => {
         return props
     }
 
-    // 
+    // 拆分
     const breakUp = () => {
         if (selectComponent.componentId === 5) {
-            let flagSelectComponent = { ...selectComponent }
-            let { top, left, width, height } = flagSelectComponent.style
-            console.log("breakUp", flagSelectComponent, selectComponentIndex)
-
+            let res: any = []
+            let flagSelectComponent = { ...selectComponent } // 选中组件
+            let { top, left, width, height } = flagSelectComponent.style // 选中样式
+            const calculation = (res: string, parentParam: number, flag = 0) => { // 计算拆分后的组件的{ top, left, width, height }
+                if (flag) return parseInt((((parseFloat(res.replace("%", "")) / 100) * flag) + parentParam).toFixed(0))
+                return parseInt(((parseFloat(res.replace("%", "")) / 100) * parentParam).toFixed(0))
+            }
+            // 查询组合内部的组件进行拆分操作
+            flagSelectComponent.propValue.resumeCompose.forEach((item: any) => {
+                let { top: itop, left: ileft, width: iwidth, height: iheight } = item.style
+                item.style = { ...item.style, top: calculation(itop, top, height), left: calculation(ileft, left, width), width: calculation(iwidth, width), height: calculation(iheight, height) }
+                // console.log("breakUp", calculation(itop, top, height), calculation(ileft, left, width), calculation(iwidth, width), calculation(iheight, height))
+                // 把修改后的值赋给res
+                res.push(item)
+            })
+            // selectComponentIndex存在问题，让删除的不是选中组合组件 （后续处理）
+            // 查找 选中的组合组件的id并将组件删除
+            for (let i = 0; i < componentData.length; i++) {
+                if (componentData[i].id === flagSelectComponent.id) {
+                    delSelect(i)
+                    break;
+                }
+            }
+            // res将拆分好的组件新增
+            res.forEach((item: any) => {
+                myAuth.increment({ ...item, id: "component" + getID() })
+            })
         }
     }
 
