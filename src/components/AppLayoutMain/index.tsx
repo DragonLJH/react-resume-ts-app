@@ -1,7 +1,9 @@
-import { FC, useContext, useEffect, useState, useRef } from 'react';
+import { FC, useContext, useEffect, useState, useRef, useMemo } from 'react';
 import './index.css';
 import { DownloadOutlined, DeleteOutlined } from '@ant-design/icons';
-import { Button, Modal, Space } from 'antd';
+import { Button, Modal, Space, InputNumber } from 'antd';
+// import html2canvas from 'html2canvas';
+import printJs from 'print-js';
 import componentList from "../../custom-component/component-list"
 import Control from "./Control";
 import commonContext from "../../commonContext";
@@ -23,6 +25,14 @@ const AppLayoutMain: FC = () => {
     let { componentData, selectComponent, selectComponentIndex } = myAuth.state
     let { style } = selectComponent
 
+
+    // A4纸比例图布 根号2比1 高比宽
+    const [a4Width, setA4Width] = useState(1000)
+
+    const a4Height = useMemo(() => {
+        return Math.SQRT2 * a4Width
+    }, [a4Width])
+
     const [mainInsideData, setMainInsideData] = useState({ top: 0, left: 0, width: 0, height: 0 }) //拖拽实时
 
     const [range, setRange] = useState({ top: 0, left: 0, width: 0, height: 0 }) //选中范围
@@ -32,6 +42,8 @@ const AppLayoutMain: FC = () => {
     const [preview, setPreview] = useState(false);
 
     const [makeUpProps, setMakeUpProps] = useState({ resumeCompose: [], indexs: [] });
+
+    // const modalRef: any = useRef()
 
     useEffect(() => {
         if (selectComponentIndex !== -1) {
@@ -183,6 +195,7 @@ const AppLayoutMain: FC = () => {
     }
 
     const makeUp = () => {
+        console.log("makeUp", makeUpProps.resumeCompose.length)
         if (makeUpProps.resumeCompose.length > 1) {
             new Promise((resolve) => {
                 // 先把组合的组件删除再生产组合组件
@@ -199,7 +212,8 @@ const AppLayoutMain: FC = () => {
                 // console.log("makeUp", getNewComposeProps(range, makeUpProps))
                 myAuth.increment({ ...componentItem, id: "component" + getID() })
             })
-
+            // 组合后清楚选中框中的数据
+            setMakeUpProps({ resumeCompose: [], indexs: [] })
         }
         setRange({ top: 0, left: 0, width: 0, height: 0 })
         // console.log("makeUp", { ...componentItem, id: "component" + getID() })
@@ -256,7 +270,11 @@ const AppLayoutMain: FC = () => {
     return (
         <div className="AppLayoutMain">
             <div className="operation">
-                <Space align="center">
+                <Space align="center" >
+                    <span>
+                        画布大小(宽度)
+                        <InputNumber defaultValue={a4Width} onChange={setA4Width} />
+                    </span>
                     <Button type="primary" onClick={breakUp}>
                         拆分
                     </Button>
@@ -271,7 +289,7 @@ const AppLayoutMain: FC = () => {
                 </Space>
             </div>
 
-            <div className="AppLayoutMainEdit" onDrop={useMyDrop} onDragOver={myDragOver} onMouseDown={myMouseDown}>
+            <div className="AppLayoutMainEdit" onDrop={useMyDrop} onDragOver={myDragOver} onMouseDown={myMouseDown} style={{ width: a4Width, height: a4Height }}>
                 <div className="range" style={getStyle({ ...range })}></div>
                 {myAuth.state.componentData.map((item: any, index: number) => {
                     return (<Control setMainInsideData={setMainInsideDataFun} setComponentData={setComponentData}
@@ -280,23 +298,49 @@ const AppLayoutMain: FC = () => {
                     </Control>)
                 })}
 
-                {guideList.map((val) => {
+                {guideList.map((val: any) => {
                     return (<div key={val.guideName} className={`guide ${val.guideName} ${myAuth.state.selectComponentIndex !== -1 ? 'active' : ''}`}
                         style={getStyle(val.style)}></div>)
                 })}
             </div>
             <Modal
+
                 centered
                 closable={false}
                 visible={preview}
                 onCancel={() => setPreview(false)}
-                width={1000}
-                bodyStyle={{ height: "800px", position: "relative" }}
+                okText="打印"
+                onOk={() => {
+                    // html2canvas截图失败，不采用html2canvas打印（Unable to access cssRules property DOMException: CSSStyleSheet.cssRules getter: Not allowed to access cross-origin stylesheet）（无法访问cssRules属性DomeException:CSSStyleSheet。cssRules getter:不允许访问跨源样式表）
+                    // console.log("modalRef", modalRef.current)
+                    // html2canvas(modalRef.current, { logging: false, scale: 0.9, allowTaint: true, useCORS: true, })
+                    //     .then(function (canvas) {
+                    //         printJs({
+                    //             printable: "modalRef",
+                    //             type: "html"
+                    //         })
+                    //         // console.log("modalRef", canvas)
+                    //         // modalRef.current.appendChild(canvas);
+                    //     });
+
+                    // 打印，使用printJs进行打印
+                    printJs({
+                        printable: "modalRef",// id => modalRef
+                        type: "html",
+                        targetStyle: ["* "],
+                        targetStyles: ["*"],
+                        style: "@page{size:auto; margin: 0px;}"
+                    })
+                }}
+                width={a4Width}
+                bodyStyle={{ height: a4Height + "px", position: "relative" }}
             >
-                <div className="modal-div"></div>
-                {myAuth.state.componentData.map((item: any, index: number) => {
-                    return <Control setMainInsideData={setMainInsideDataFun} setComponentData={setComponentData} element={item} index={index} activeComponent={false} key={item.id}>{item.component(item.propValue)}</Control>
-                })}
+                <div id="modalRef">
+                    {/* <div className="modal-div"></div> */}
+                    {myAuth.state.componentData.map((item: any, index: number) => {
+                        return <Control setMainInsideData={setMainInsideDataFun} setComponentData={setComponentData} element={item} index={index} activeComponent={false} key={item.id}>{item.component(item.propValue)}</Control>
+                    })}
+                </div>
             </Modal>
         </div>
     )
