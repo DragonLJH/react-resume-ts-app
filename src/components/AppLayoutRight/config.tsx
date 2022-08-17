@@ -29,8 +29,8 @@ export const iconAttribute: any = {
 // 配置样式
 export const configStyle: any = {
     ...commomStyle,
-    backgroundColor: { inputType: "Cascader", label: "背景颜色", chidren: [...colors] },
-    color: { inputType: "Cascader", label: "字体颜色", chidren: [...colors] },
+    backgroundColor: { inputType: "SelectColor", label: "背景颜色", chidren: [...colors] },
+    color: { inputType: "SelectColor", label: "字体颜色", chidren: [...colors] },
     fontSize: { inputType: "inputNumber", label: "字体大小" },
     fontWeight: {
         inputType: "select", label: "字体权重", chidren: [
@@ -45,7 +45,6 @@ export const configStyle: any = {
             { value: "900", label: "900", },
         ]
     },
-    border: { inputType: "input", label: "边框" },
     textAlign: {
         inputType: "select", label: "文本对齐", chidren: [
             { value: "left", label: "左对齐", },
@@ -53,6 +52,7 @@ export const configStyle: any = {
             { value: "right", label: "右对齐", },
         ]
     },
+    border: { inputType: "input", label: "边框" },
 }
 
 // 公共属性（内容）
@@ -100,7 +100,7 @@ export const configAttribute: any = {
         title: { inputType: "input", label: "主标题" },
         avatar: { ...iconAttribute.icon, label: "次标题Icon" },
         secondaryTitle: { inputType: "input", label: "次标题" },
-        description: { inputType: "input", label: "内容" },
+        description: { inputType: "textArea", label: "内容" },
         cover: { inputType: "Upload", label: "上传封面图", },
     },
     select4: {

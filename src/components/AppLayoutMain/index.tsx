@@ -7,8 +7,11 @@ import printJs from 'print-js';
 import componentList from "../../custom-component/component-list"
 import Control from "./Control";
 import commonContext from "../../commonContext";
-import { getStyle, HEADER_Y, SIDER_LEFT_X } from "../../utils";
+// import { getStyle, HEADER_Y, SIDER_LEFT_X } from "../../utils";
+import { getStyle } from "../../utils";
 import { getID } from "../../utils/globalID";
+
+// import colorConfig from "../../utils/color-config"
 
 // var id = 0;
 
@@ -18,16 +21,15 @@ import { getID } from "../../utils/globalID";
 
 
 
-const AppLayoutMain: FC = () => {
+const AppLayoutMain: FC = () => { 
     /*-----------------------------------拖拽添加组件-------------------------------------------*/
     //状态管理，在App.tsx管理调用
     const myAuth: any = useContext(commonContext);
     let { componentData, selectComponent, selectComponentIndex } = myAuth.state
     let { style } = selectComponent
 
-
     // A4纸比例图布 根号2比1 高比宽
-    const [a4Width, setA4Width] = useState(1000)
+    const [a4Width, setA4Width] = useState(595)
 
     const a4Height = useMemo(() => {
         return Math.SQRT2 * a4Width
@@ -43,7 +45,9 @@ const AppLayoutMain: FC = () => {
 
     const [makeUpProps, setMakeUpProps] = useState({ resumeCompose: [], indexs: [] });
 
-    // const modalRef: any = useRef()
+    // const modalRef: any = useRef() 
+
+    const appLayoutMainEdit: any = useRef()
 
     useEffect(() => {
         if (selectComponentIndex !== -1) {
@@ -77,7 +81,8 @@ const AppLayoutMain: FC = () => {
         let index = e.dataTransfer.getData("index"); // 获取拖拽组件的id
         let componentItem = componentList[index]     // 获取拖拽组件
         let { clientX, clientY }: { clientX: number, clientY: number } = e  // 获取落点的 x y（clientX，clientY） 坐标
-        componentItem.style = { ...componentItem.style, left: clientX - SIDER_LEFT_X, top: clientY - HEADER_Y }  // 给组件添加 x y（clientX，clientY） 坐标
+        let { x, y } = appLayoutMainEdit.current.getBoundingClientRect() // getBoundingClientRect()获取 appLayoutMainEdit 元素的左，上，右和下分别相对浏览器视窗的位置
+        componentItem.style = { ...componentItem.style, left: clientX - x, top: clientY - y }  // 给组件添加 x y（clientX，clientY） 坐标
         // dispatch({ type: 'increment', data: { ...componentItem, id: "component" + getID() } })  // 添加组件
         let newComponentItem = { ...componentItem, id: "component" + getID() }
         myAuth.increment(newComponentItem)
@@ -101,8 +106,9 @@ const AppLayoutMain: FC = () => {
             // 解构赋值 给 moveX 和 moveY 分别赋值 clientX 和 clientY
             // 移动后的坐标
             let { clientX: moveX, clientY: moveY }: { clientX: number, clientY: number } = moveEvent
-            let sLeft = (InitialValueX - SIDER_LEFT_X)
-            let sTop = (InitialValueY - HEADER_Y)
+            let { x, y } = appLayoutMainEdit.current.getBoundingClientRect() // getBoundingClientRect()获取 appLayoutMainEdit 元素的左，上，右和下分别相对浏览器视窗的位置 
+            let sLeft = (InitialValueX - x)
+            let sTop = (InitialValueY - y)
             let sWidth = (moveX - InitialValueX)
             let sHeight = (moveY - InitialValueY)
 
@@ -195,23 +201,22 @@ const AppLayoutMain: FC = () => {
     }
 
     const makeUp = () => {
-        console.log("makeUp", makeUpProps.resumeCompose.length)
         if (makeUpProps.resumeCompose.length > 1) {
-            new Promise((resolve) => {
-                // 先把组合的组件删除再生产组合组件
-                let newComponentData = [...myAuth.state.componentData]
-                makeUpProps.indexs.forEach((val: number) => {
-                    newComponentData.splice(val, 1)
-                })
-                myAuth.updataComponentData(newComponentData)
-                resolve(true)
-            }).then(() => {
-                let componentItem = componentList[5]
-                componentItem.style = range
-                componentItem.propValue = getNewComposeProps(range, makeUpProps)
-                // console.log("makeUp", getNewComposeProps(range, makeUpProps))
-                myAuth.increment({ ...componentItem, id: "component" + getID() })
+            // 先把组合的组件删除再生产组合组件
+            let newComponentData = [...myAuth.state.componentData]
+            makeUpProps.indexs.forEach((val: number) => {
+                newComponentData.splice(val, 1)
             })
+            let componentItem = componentList[5]
+            componentItem.style = range
+            componentItem.propValue = getNewComposeProps(range, makeUpProps)
+            myAuth.updataComponentData([...newComponentData, { ...componentItem, id: "component" + getID() }])
+            console.log("makeUp", myAuth.state.componentData)
+            // let componentItem = componentList[5]
+            // componentItem.style = range
+            // componentItem.propValue = getNewComposeProps(range, makeUpProps)
+            // console.log("makeUp", { ...myAuth })
+            // myAuth.increment({ ...componentItem, id: "component" + getID() })
             // 组合后清楚选中框中的数据
             setMakeUpProps({ resumeCompose: [], indexs: [] })
         }
@@ -237,6 +242,7 @@ const AppLayoutMain: FC = () => {
     // 拆分
     const breakUp = () => {
         if (selectComponent.componentId === 5) {
+            console.log("breakUp", selectComponentIndex)
             let res: any = []
             let flagSelectComponent = { ...selectComponent } // 选中组件
             let { top, left, width, height } = flagSelectComponent.style // 选中样式
@@ -254,12 +260,13 @@ const AppLayoutMain: FC = () => {
             })
             // selectComponentIndex存在问题，让删除的不是选中组合组件 （后续处理）
             // 查找 选中的组合组件的id并将组件删除
-            for (let i = 0; i < componentData.length; i++) {
-                if (componentData[i].id === flagSelectComponent.id) {
-                    delSelect(i)
-                    break;
-                }
-            }
+            // for (let i = 0; i < componentData.length; i++) {
+            //     if (componentData[i].id === flagSelectComponent.id) {
+            //         delSelect(i)
+            //         break;
+            //     }
+            // }
+            delSelect()
             // res将拆分好的组件新增
             res.forEach((item: any) => {
                 myAuth.increment({ ...item, id: "component" + getID() })
@@ -267,8 +274,56 @@ const AppLayoutMain: FC = () => {
         }
     }
 
+    //  网格线取至 visual-drag-demo
+    const Grid = () => {
+        return (
+            <svg
+                className="grid"
+                width="100%"
+                height="100%"
+                xmlns="http://www.w3.org/2000/svg"
+            >
+                <defs>
+                    <pattern
+                        id="smallGrid"
+                        width="7.236328125"
+                        height="7.236328125"
+                        patternUnits="userSpaceOnUse"
+                    >
+                        <path
+                            d="M 7.236328125 0 L 0 0 0 7.236328125"
+                            fill="none"
+                            stroke="rgba(207, 207, 207, 0.3)"
+                        // stroke-width="1"
+                        >
+                        </path>
+                    </pattern>
+                    <pattern
+                        id="grid"
+                        width="36.181640625"
+                        height="36.181640625"
+                        patternUnits="userSpaceOnUse"
+                    >
+                        <rect width="36.181640625" height="36.181640625" fill="url(#smallGrid)"></rect>
+                        <path
+                            d="M 36.181640625 0 L 0 0 0 36.181640625"
+                            fill="none"
+                            stroke="rgba(186, 186, 186, 0.5)"
+                        // stroke-width="1"
+                        >
+                        </path>
+                    </pattern>
+                </defs>
+                <rect width="100%" height="100%" fill="url(#grid)"></rect>
+            </svg>
+        )
+    }
+
     return (
         <div className="AppLayoutMain">
+            {/* <div>
+                {colorConfig.colorPanel}
+            </div> */}
             <div className="operation">
                 <Space align="center" >
                     <span>
@@ -289,8 +344,9 @@ const AppLayoutMain: FC = () => {
                 </Space>
             </div>
 
-            <div className="AppLayoutMainEdit" onDrop={useMyDrop} onDragOver={myDragOver} onMouseDown={myMouseDown} style={{ width: a4Width, height: a4Height }}>
+            <div className="AppLayoutMainEdit" ref={appLayoutMainEdit} onDrop={useMyDrop} onDragOver={myDragOver} onMouseDown={myMouseDown} style={{ width: a4Width, height: a4Height }}>
                 <div className="range" style={getStyle({ ...range })}></div>
+                <Grid />
                 {myAuth.state.componentData.map((item: any, index: number) => {
                     return (<Control setMainInsideData={setMainInsideDataFun} setComponentData={setComponentData}
                         element={item} index={index} activeComponent={myAuth.state.selectComponent.id === item.id} key={item.id}>
@@ -336,7 +392,7 @@ const AppLayoutMain: FC = () => {
                 bodyStyle={{ height: a4Height + "px", position: "relative" }}
             >
                 <div id="modalRef">
-                    {/* <div className="modal-div"></div> */}
+                    <div className="modal-div"></div>
                     {myAuth.state.componentData.map((item: any, index: number) => {
                         return <Control setMainInsideData={setMainInsideDataFun} setComponentData={setComponentData} element={item} index={index} activeComponent={false} key={item.id}>{item.component(item.propValue)}</Control>
                     })}
