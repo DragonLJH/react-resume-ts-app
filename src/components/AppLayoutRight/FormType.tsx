@@ -1,6 +1,6 @@
 import { FC, useEffect, useState } from 'react';
-import { Select, Input, InputNumber, Upload, Image, Radio, Cascader } from 'antd';
-const { Option } = Select;
+import { Select, Input, InputNumber, Upload, Image, Radio } from 'antd';
+const { Option, OptGroup } = Select;
 const { TextArea } = Input;
 
 interface FormTypeObj {
@@ -45,20 +45,21 @@ const formTypeConfig: any = {
             </>
         )
     },
-    "Cascader": (val: any, set: any, props: Array<SelectObj>) => {
-        const onChange = (value: any) => {
-            if (value) {
-                set(value[value.length - 1])
-            } else {
-                set("")
-            }
-        }
-        const onSearch = (value: string) => value
-        const displayRender = (labels: string[]) => labels[labels.length - 1];
-        const dropdownRender = (menus: any) => {
-            return <span>{menus}</span>
-        }
-        return <Cascader dropdownRender={dropdownRender} expandTrigger="hover" value={val} showSearch options={props} onSearch={onSearch} onChange={onChange} displayRender={displayRender} />
+    "SelectColor": (val: any, set: any, props: Array<SelectObj>) => {
+        console.log(props)
+        return (<Select value={val} onChange={set}>
+            {props.map((item: any) => {
+                return (
+                    <OptGroup key={item.value} label={item.label}>
+                        {item.children.map((res: any, index: number) => {
+                            return (<Option value={res.value} key={item.value + index}>
+                                <div style={{ backgroundColor: res.value }}>{res.label}</div>
+                            </Option>)
+                        })}
+                    </OptGroup>
+                )
+            })}
+        </Select>)
     }
 
 }
