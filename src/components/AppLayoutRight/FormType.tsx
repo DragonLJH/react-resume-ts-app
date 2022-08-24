@@ -1,5 +1,5 @@
 import { FC, useEffect, useState } from 'react';
-import { Select, Input, InputNumber, Upload, Image, Radio } from 'antd';
+import { Select, Input, InputNumber, Upload, Image, Radio, Space, Row, Col } from 'antd';
 const { Option, OptGroup } = Select;
 const { TextArea } = Input;
 
@@ -46,7 +46,6 @@ const formTypeConfig: any = {
         )
     },
     "SelectColor": (val: any, set: any, props: Array<SelectObj>) => {
-        console.log(props)
         return (<Select value={val} onChange={set}>
             {props.map((item: any) => {
                 return (
@@ -60,6 +59,32 @@ const formTypeConfig: any = {
                 )
             })}
         </Select>)
+    },
+    "BorderSelect": (val: any, set: any, props: any) => {
+        if (val) {
+            let [resStyle, resWidth, resColor] = val.split(" ") 
+            const setResColor = (data: any) => {
+                let res = [resStyle, resWidth, data].join(" ")
+                set(res)
+            }
+            const setResWidth = (data: any) => {
+                let res = [resStyle, `${data}px`, resColor].join(" ")
+                set(res)
+            }
+            const setResStyle = (data: any) => {
+                let res = [data, resWidth, resColor].join(" ")
+                set(res)
+            }
+            return (
+                <Row justify="space-around">
+                    <Col span={9}>{formTypeConfig.select(resStyle, setResStyle, props.style)}</Col>
+                    <Col span={9}>{formTypeConfig.SelectColor(resColor, setResColor, props.color)}</Col>
+                    <Col span={5}>{formTypeConfig.inputNumber(Number.parseInt(resWidth), setResWidth)}</Col>
+                </Row>
+            )
+
+        }
+
     }
 
 }

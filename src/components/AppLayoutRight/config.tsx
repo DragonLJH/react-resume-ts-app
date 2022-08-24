@@ -6,15 +6,55 @@ const { colors } = colorConfig
 export declare type commomType = {
     inputType: string;
     label: string;
-    name: string;
+    name?: string;
 }
 
+// 边框样式
+// export const borderCommomStyle: any = {
+//     borderWidth: { inputType: "inputNumber", label: "边框宽度" },
+//     borderStyle: {
+//         inputType: "select", label: "边框样式", chidren: [
+//             { value: "", label: "", },
+//             { value: "solid", label: "solid", },
+//             { value: "dotted", label: "dotted", },
+//             { value: "double", label: "double", },
+//             { value: "dashed", label: "dashed", },
+//         ]
+//     },
+//     borderColor: { inputType: "SelectColor", label: "边框颜色", chidren: [...colors] },
+//     borderTop: {
+//         inputType: "select", label: "上边框", chidren: [
+//             { value: "", label: "是", },
+//             { value: "none", label: "否", },
+//         ]
+//     },
+//     borderRight: {
+//         inputType: "select", label: "右边框", chidren: [
+//             { value: "", label: "是", },
+//             { value: "none", label: "否", },
+//         ]
+//     },
+//     borderBottom: {
+//         inputType: "select", label: "下边框", chidren: [
+//             { value: "", label: "是", },
+//             { value: "none", label: "否", },
+//         ]
+//     },
+//     borderLeft: {
+//         inputType: "select", label: "左边框", chidren: [
+//             { value: "", label: "是", },
+//             { value: "none", label: "否", },
+//         ]
+//     },
+
+// }
 // 公共样式（x，y，宽，高）
 export const commomStyle: any = {
     top: { inputType: "inputNumber", label: "y" },
     left: { inputType: "inputNumber", label: "x" },
     width: { inputType: "inputNumber", label: "宽" },
-    height: { inputType: "inputNumber", label: "高" }
+    height: { inputType: "inputNumber", label: "高" },
+    // ...borderCommomStyle
 }
 export const iconAttribute: any = {
     icon: {
@@ -26,6 +66,7 @@ export const iconAttribute: any = {
         ]
     }
 }
+
 // 配置样式
 export const configStyle: any = {
     ...commomStyle,
@@ -52,7 +93,66 @@ export const configStyle: any = {
             { value: "right", label: "右对齐", },
         ]
     },
-    border: { inputType: "input", label: "边框" },
+    border: {
+        inputType: "BorderSelect", label: "边框", chidren: {
+            "style": [
+                { value: "", label: "", },
+                { value: "solid", label: "solid", },
+                { value: "dotted", label: "dotted", },
+                { value: "double", label: "double", },
+                { value: "dashed", label: "dashed", },
+            ],
+            "color": [...colors]
+        }
+    },
+    borderTop: {
+        inputType: "BorderSelect", label: "上边框", chidren: {
+            "style": [
+                { value: "", label: "", },
+                { value: "solid", label: "solid", },
+                { value: "dotted", label: "dotted", },
+                { value: "double", label: "double", },
+                { value: "dashed", label: "dashed", },
+            ],
+            "color": [...colors]
+        }
+    },
+    borderRight: {
+        inputType: "BorderSelect", label: "右边框", chidren: {
+            "style": [
+                { value: "", label: "", },
+                { value: "solid", label: "solid", },
+                { value: "dotted", label: "dotted", },
+                { value: "double", label: "double", },
+                { value: "dashed", label: "dashed", },
+            ],
+            "color": [...colors]
+        }
+    },
+    borderBottom: {
+        inputType: "BorderSelect", label: "下边框", chidren: {
+            "style": [
+                { value: "", label: "", },
+                { value: "solid", label: "solid", },
+                { value: "dotted", label: "dotted", },
+                { value: "double", label: "double", },
+                { value: "dashed", label: "dashed", },
+            ],
+            "color": [...colors]
+        }
+    },
+    borderLeft: {
+        inputType: "BorderSelect", label: "左边框", chidren: {
+            "style": [
+                { value: "", label: "", },
+                { value: "solid", label: "solid", },
+                { value: "dotted", label: "dotted", },
+                { value: "double", label: "double", },
+                { value: "dashed", label: "dashed", },
+            ],
+            "color": [...colors]
+        }
+    },
 }
 
 // 公共属性（内容）
