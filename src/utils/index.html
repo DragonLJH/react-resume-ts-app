@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<style>
+    html,
+    body {
+        padding: 0;
+        margin: 0;
+    }
+
+    .panel {
+        width: 360px;
+        height: 360px;
+        position: relative;
+        background-color: #F00;
+        margin: 50px;
+    }
+
+    .panel::before {
+        content: "";
+        position: absolute;
+        left: 0px;
+        top: 0px;
+        width: 100%;
+        height: 100%;
+        background-image: linear-gradient(to right, rgba(255, 255, 255, 1), rgba(255, 255, 255, 0));
+    }
+
+    .panel::after {
+        content: "";
+        position: absolute;
+        left: 0px;
+        top: 0px;
+        width: 100%;
+        height: 100%;
+        background-image: linear-gradient(to top, rgba(0, 0, 0, 1), rgba(0, 0, 0, 0));
+    }
+
+    .color-scale-column {
+        height: 360px;
+        width: 10px;
+        background: linear-gradient(to bottom, #f00 0%, #ff0 16.66%, #0f0 33.33%, #0ff 50%, #00f 66.66%, #f0f 83.33%, #f00 100%);
+        margin: 50px;
+    }
+
+    .showColor {
+        height: 50px;
+        width: 50px;
+        margin: 50px;
+
+    }
+
+    .inlineBlock {
+        display: inline-block;
+
+    }
+
+    .positionRelative {
+        position: relative;
+    }
+</style>
+
+<body>
+    <div class="positionRelative">
+        <div class="color panel inlineBlock" onmousedown="down(event)"></div>
+        <div class="color-scale-column inlineBlock" onmousedown="changePanel(event)"> </div>
+        <div class="showColor"></div>
+        <!-- <div class="color panel"  ></div> -->
+    </div>
+    <script>
+        function HSVToRGB(H, S, V) {
+            let R, G, B;
+            if (S == 0) {
+                R = V * 255
+                G = V * 255
+                B = V * 255
+            } else {
+                let var_h = H * 6
+                if (var_h == 6) var_h = 0      //H must be < 1
+                let var_i = parseInt(var_h)             //Or ... var_i = floor( var_h )
+                let var_1 = V * (1 - S)
+                let var_2 = V * (1 - S * (var_h - var_i))
+                let var_3 = V * (1 - S * (1 - (var_h - var_i)))
+                if (var_i == 0) { var_r = V; var_g = var_3; var_b = var_1 }
+                else if (var_i == 1) { var_r = var_2; var_g = V; var_b = var_1 }
+                else if (var_i == 2) { var_r = var_1; var_g = V; var_b = var_3 }
+                else if (var_i == 3) { var_r = var_1; var_g = var_2; var_b = V }
+                else if (var_i == 4) { var_r = var_3; var_g = var_1; var_b = V }
+                else { var_r = V; var_g = var_1; var_b = var_2 }
+                R = var_r * 255
+                G = var_g * 255
+                B = var_b * 255
+            }
+            return `rgb(${R.toFixed(0)},${G.toFixed(0)},${B.toFixed(0)})`
+        }
+        const panle = {
+            h: 0
+        }
+        const changePanel = (event) => {
+            const { y: eY } = event
+            let clientRect = document.querySelector(".color-scale-column").getBoundingClientRect()
+            const { y: cY } = clientRect
+            let h = eY - cY
+            panle.h = h
+            document.querySelector(".color").style.background = `hsl(${h}, 100%, 50%)`
+        }
+        const down = (event) => {
+            let { layerX, layerY } = event
+            const to2 = (data) => {
+                return parseFloat((data).toFixed(2))
+            }
+            const [H, S, V] = [panle.h / 360, to2(layerX / 360), to2(1 - layerY / 360)]
+            document.querySelector(".showColor").style.background = HSVToRGB(H, S, V)
+        }
+    </script>
+</body>
+
+</html>
