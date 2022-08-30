@@ -5,6 +5,7 @@ import commonContext from "../../commonContext";
 import type { commomType } from "./config"; // 自定义表单控件
 import { configStyle, configAttribute } from "./config";    // 对应配置属性 {inputType , label }
 import FormType from "./FormType";
+import {ColorPanel} from "./ColorPanel";
 
 const { Panel } = Collapse;
 const formItemLayout = {
@@ -88,6 +89,9 @@ const AppLayoutRight: FC = () => {
     return (
         <div className="AppLayoutRight" style={{}}>
             <Empty description={false} />
+            <div>
+                <ColorPanel />
+            </div>
         </div>
     )
 };

@@ -1,0 +1,89 @@
+.color-panel {
+    position: relative;
+    width: 350px;
+    height: 250px;
+    border: solid 1px #ccc;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    background-color: #ccc;
+}
+
+.display-inline-block {
+    display: inline-block;
+    position: relative;
+    border: solid 1px #eee;
+}
+
+.color-panel>.color-panel-item {
+    width: 180px;
+    height: 180px;
+}
+
+.color-panel>.color-panel-item::before {
+    content: "";
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    width: 100%;
+    height: 100%;
+    background-image: linear-gradient(to right, rgba(255, 255, 255, 1), rgba(255, 255, 255, 0));
+}
+
+.color-panel>.color-panel-item::after {
+    content: "";
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    width: 100%;
+    height: 100%;
+    background-image: linear-gradient(to top, rgba(0, 0, 0, 1), rgba(0, 0, 0, 0));
+}
+
+
+.color-panel>.color-scale-column {
+    width: 20px;
+    height: 180px;
+    background-image: linear-gradient(to bottom, #f00 0%, #ff0 16.66%, #0f0 33.33%, #0ff 50%, #00f 66.66%, #f0f 83.33%, #f00 100%);
+}
+
+.color-panel>.color-scale-column>.rod {
+    position: absolute;
+    width: 100%;
+    height: 2px;
+    background-color: #fff;
+}
+
+.color-panel>.color-scale-column>.rod::before {
+    content: "";
+    width: 0;
+    height: 0;
+    border: solid 4px rgba(255, 255, 255, 0);
+    border-left: solid 4px #fff;
+    top: -3px;
+    left: -3px;
+    position: absolute;
+
+
+}
+
+.color-panel>.color-scale-column>.rod::after {
+    content: "";
+    width: 0;
+    height: 0;
+    border: solid 4px rgba(255, 255, 255, 0);
+    border-right: solid 4px #fff;
+    top: -3px;
+    right: -3px;
+    position: absolute;
+}
+
+.color-panel>.msg {
+    width: 100px;
+    height: 180px;
+}
+
+.color-panel>.msg>.item {
+    width: 30px;
+    height: 30px;
+}
