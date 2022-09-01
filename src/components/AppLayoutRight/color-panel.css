@@ -39,6 +39,13 @@
     height: 100%;
     background-image: linear-gradient(to top, rgba(0, 0, 0, 1), rgba(0, 0, 0, 0));
 }
+.color-panel>.color-panel-item>.target{
+    position: absolute;
+    width: 4px;
+    height: 4px;
+    border: 1px solid #ccc;
+    border-radius: 50%;
+}
 
 
 .color-panel>.color-scale-column {
