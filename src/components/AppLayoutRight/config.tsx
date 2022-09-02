@@ -71,7 +71,8 @@ export const iconAttribute: any = {
 export const configStyle: any = {
     ...commomStyle,
     backgroundColor: { inputType: "SelectColor", label: "背景颜色", chidren: [...colors] },
-    color: { inputType: "SelectColor", label: "字体颜色", chidren: [...colors] },
+    // color: { inputType: "SelectColor", label: "字体颜色", chidren: [...colors] },
+    color: { inputType: "colorPanel", label: "字体颜色" },
     fontSize: { inputType: "inputNumber", label: "字体大小" },
     fontWeight: {
         inputType: "select", label: "字体权重", chidren: [

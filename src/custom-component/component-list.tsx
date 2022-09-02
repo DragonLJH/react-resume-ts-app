@@ -28,7 +28,7 @@ const componentList: Array<any> = [
             fontWeight: 100,
             backgroundColor: "#fff",
             textAlign: 'center',
-            color: "#000",
+            color: "rgba(0,0,0,1)",
             borderBottom: "solid 1px #ccc" 
         },
     },

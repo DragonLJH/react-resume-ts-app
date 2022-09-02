@@ -1,5 +1,7 @@
 import { FC, useEffect, useState } from 'react';
-import { Select, Input, InputNumber, Upload, Image, Radio, Space, Row, Col } from 'antd';
+import { Select, Input, InputNumber, Upload, Image, Radio, Tag, Row, Col, Button } from 'antd';
+import { ColorPanel } from "./ColorPanel";
+import { relative } from 'path';
 const { Option, OptGroup } = Select;
 const { TextArea } = Input;
 
@@ -62,7 +64,7 @@ const formTypeConfig: any = {
     },
     "BorderSelect": (val: any, set: any, props: any) => {
         if (val) {
-            let [resStyle, resWidth, resColor] = val.split(" ") 
+            let [resStyle, resWidth, resColor] = val.split(" ")
             const setResColor = (data: any) => {
                 let res = [resStyle, resWidth, data].join(" ")
                 set(res)
@@ -85,8 +87,51 @@ const formTypeConfig: any = {
 
         }
 
+    },
+    "colorPanel": (val: any, set: any) => {
+        if (val) {
+            return (
+                <ColorPanelComponent val={val} set={set} />
+            )
+        }
     }
 
+}
+
+const ColorPanelComponent = (props: any) => {
+    const { val, set }: { val: any, set: any } = props
+    const [flag, setFlag] = useState(false)
+    const changeVal = () => {
+        let flag = val.replace("rgba(", "").replace(")", "").split(",")
+        const [R, G, B, A] = flag
+        return {
+            R, G, B, A
+        }
+    }
+    const setRgba = (data: any) => {
+        const { R, G, B, A } = data
+        set(`rgba(${R},${G},${B},${A})`)
+    }
+    const showColorPanel = () => {
+        setFlag(false)
+    }
+    const clickPanel = () => {
+        setFlag(true)
+    }
+    return (
+        <div style={{ position: "relative", width: "100%" }}>
+            <div>
+                <Button onClick={clickPanel} type="text" style={{ backgroundColor: val }}>{val}</Button>
+            </div>
+            {flag ? (
+                <div style={{ position: "absolute", top: 0, left: 0, zIndex: 9999 }} >
+                    <ColorPanel rabg={changeVal()} setRgba={setRgba} showColorPanel={showColorPanel} />
+                </div>
+            )
+                : ""}
+
+        </div>
+    )
 }
 
 // 自定义表单控件
