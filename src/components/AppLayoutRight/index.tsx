@@ -5,12 +5,12 @@ import commonContext from "../../commonContext";
 import type { commomType } from "./config"; // 自定义表单控件
 import { configStyle, configAttribute } from "./config";    // 对应配置属性 {inputType , label }
 import FormType from "./FormType";
-import {ColorPanel} from "./ColorPanel";
+// import { ColorPanel } from "./ColorPanel";
 
 const { Panel } = Collapse;
 const formItemLayout = {
-    labelCol: { span: 7 },
-    wrapperCol: { span: 15 },
+    labelCol: { span: 5 },
+    wrapperCol: { span: 19 },
 };
 
 const AppLayoutRight: FC = () => {
@@ -26,6 +26,13 @@ const AppLayoutRight: FC = () => {
             formAttribute.setFieldsValue(myAuth.state.selectComponent.propValue)  // 给form 控制实例 设置表单的值
         }
     })
+
+    // const setRgba = (data: any) => {
+    //     console.log("setRgba", data)
+    // }
+    // const showColorPanel = (data: any) => {
+    //     console.log("showColorPanel", data)
+    // }
 
     if (myAuth.state.selectComponentIndex !== -1) {
         const { style, propValue, componentId } = myAuth.state.selectComponent
@@ -89,9 +96,9 @@ const AppLayoutRight: FC = () => {
     return (
         <div className="AppLayoutRight" style={{}}>
             <Empty description={false} />
-            <div>
-                <ColorPanel />
-            </div>
+            {/* <div>
+                <ColorPanel rabg={{ R: 0, G: 0, B: 0, A: 0 }} setRgba={setRgba} showColorPanel={showColorPanel} />
+            </div> */}
         </div>
     )
 };

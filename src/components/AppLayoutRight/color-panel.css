@@ -1,12 +1,15 @@
+.color-main{
+    background-color: #ccc; 
+    width: 320px;
+}
 .color-panel {
     position: relative;
-    width: 350px;
-    height: 250px;
+    width: 320px;
+    height: 200px;
     border: solid 1px #ccc;
     display: flex;
     align-items: center;
     justify-content: space-around;
-    background-color: #ccc;
 }
 
 .display-inline-block {

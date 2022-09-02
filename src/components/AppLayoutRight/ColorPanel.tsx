@@ -1,15 +1,39 @@
-import React, { FC, useMemo, useRef, useState } from 'react';
-import { InputNumber, Space, Row, Col } from 'antd';
+import React, { FC, useEffect, useMemo, useRef, useState } from 'react';
+import { InputNumber, Button, Row, Col } from 'antd';
 import './color-panel.css';
 
-export const ColorPanel: FC = () => {
+type rgbaType = {
+    R: number;
+    G: number;
+    B: number;
+    A: number;
+}
+
+
+type colorProps = {
+    rabg: rgbaType;
+    setRgba: any;
+    showColorPanel: any;
+}
+
+export const ColorPanel: FC<colorProps> = (props: colorProps) => {
+    const { rabg, setRgba, showColorPanel } = props
+
     const colorPanelItem: any = useRef()
     const colorScaleColumn: any = useRef()
-
     const [hsvH, setHsvH] = useState(0)
     const [rodTop, setRodTop] = useState(0)
     const [rgbColor, setRgbColor] = useState({ R: 0, G: 0, B: 0, A: 0 })
     const [targetVal, setTargetVal] = useState({ top: "0px", left: "0px" })
+
+    useEffect(() => {
+        setRgbColor(rabg)
+    }, [])
+
+    const closeColorPanel = () => {
+        showColorPanel()
+        setRgba(rgbColor)
+    }
 
     const colorScaleColumnDown = (event: any) => {
         const { clientY } = event
@@ -19,6 +43,8 @@ export const ColorPanel: FC = () => {
         setRodTop(res)
     }
 
+
+    // RGB 和 HSV 之间的转化公式是在 http://www.easyrgb.com/en/math.php 获取
 
     /**
      * 
@@ -122,52 +148,60 @@ export const ColorPanel: FC = () => {
     }
 
 
-    return (<div className="color-panel">
-        <div ref={colorPanelItem}
-            className="display-inline-block color-panel-item"
-            style={{ backgroundColor: `hsl(${hsvH},100%,50%)` }}
-            onMouseDown={(event) => colorPanelItemDown(event)}>
-            <div className="target" style={targetVal}></div>
-        </div>
-        <div ref={colorScaleColumn}
-            className="display-inline-block color-scale-column"
-            onMouseDown={(event) => colorScaleColumnDown(event)}>
-            <div className="rod" style={{ top: rodTop }}></div>
-        </div>
-        <div className="display-inline-block msg">
-            <div className="item" style={{ backgroundColor: `rgba(${rgbColor.R},${rgbColor.G},${rgbColor.B},${rgbColor.A})` }}></div>
-            <div>
-                <Row>
-                    <Col span={3}>R</Col>
-                    <Col span={21}>
-                        <InputNumber style={{ width: "4rem" }} min={0} max={255} value={rgbColor.R} onChange={(val) => { inputChange(val, "R") }} />
-                    </Col>
-                </Row>
-                <Row>
-                    <Col span={3}>G</Col>
-                    <Col span={21}>
-                        <InputNumber style={{ width: "4rem" }} min={0} max={255} value={rgbColor.G} onChange={(val) => { inputChange(val, "G") }} />
-                    </Col>
-                </Row>
-                <Row>
-                    <Col span={3}>B</Col>
-                    <Col span={21}>
-                        <InputNumber style={{ width: "4rem" }} min={0} max={255} value={rgbColor.B} onChange={(val) => { inputChange(val, "B") }} />
-                    </Col>
-                </Row>
-                <Row>
-                    <Col span={3}>A</Col>
-                    <Col span={21}>
-                        <InputNumber style={{ width: "4rem" }} min={0} max={1} value={rgbColor.A} onChange={(val) => { inputChange(val, "A") }} />
-                    </Col>
-                </Row>
+    return (
+        <div className="color-main">
+            <div className="color-panel">
+                <div ref={colorPanelItem}
+                    className="display-inline-block color-panel-item"
+                    style={{ backgroundColor: `hsl(${hsvH},100%,50%)` }}
+                    onMouseDown={(event) => colorPanelItemDown(event)}>
+                    <div className="target" style={targetVal}></div>
+                </div>
+                <div ref={colorScaleColumn}
+                    className="display-inline-block color-scale-column"
+                    onMouseDown={(event) => colorScaleColumnDown(event)}>
+                    <div className="rod" style={{ top: rodTop }}></div>
+                </div>
+                <div className="display-inline-block msg">
+                    <div className="item" style={{ backgroundColor: `rgba(${rgbColor.R},${rgbColor.G},${rgbColor.B},${rgbColor.A})` }}></div>
+                    <div>
+                        <Row>
+                            <Col span={3}>R</Col>
+                            <Col span={21}>
+                                <InputNumber style={{ width: "4rem" }} min={0} max={255} value={rgbColor.R} onChange={(val) => { inputChange(val, "R") }} />
+                            </Col>
+                        </Row>
+                        <Row>
+                            <Col span={3}>G</Col>
+                            <Col span={21}>
+                                <InputNumber style={{ width: "4rem" }} min={0} max={255} value={rgbColor.G} onChange={(val) => { inputChange(val, "G") }} />
+                            </Col>
+                        </Row>
+                        <Row>
+                            <Col span={3}>B</Col>
+                            <Col span={21}>
+                                <InputNumber style={{ width: "4rem" }} min={0} max={255} value={rgbColor.B} onChange={(val) => { inputChange(val, "B") }} />
+                            </Col>
+                        </Row>
+                        <Row>
+                            <Col span={3}>A</Col>
+                            <Col span={21}>
+                                <InputNumber style={{ width: "4rem" }} min={0} max={1} value={rgbColor.A} onChange={(val) => { inputChange(val, "A") }} />
+                            </Col>
+                        </Row>
+
+                    </div>
+                    <div>
+                    </div>
+                </div>
+
 
             </div>
             <div>
+                <Button type="primary" onClick={closeColorPanel} >
+                    确认
+                </Button>
             </div>
-        </div>
-
-
-    </div>)
+        </div>)
 }
 
