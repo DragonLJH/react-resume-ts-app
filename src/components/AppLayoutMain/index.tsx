@@ -339,7 +339,7 @@ const AppLayoutMain: FC = () => {
                     <Button type="primary" onClick={() => setPreview(true)}>
                         预览
                     </Button>
-                    <Button onClick={delSelect} type="primary" icon={<DeleteOutlined />}></Button>
+                    <Button onClick={() => delSelect(myAuth.state.selectComponentIndex)} type="primary" icon={<DeleteOutlined />}></Button>
                     <Button onClick={download} type="primary" icon={<DownloadOutlined />}></Button>
                 </Space>
             </div>
