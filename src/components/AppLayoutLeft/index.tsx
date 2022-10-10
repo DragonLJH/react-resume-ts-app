@@ -1,6 +1,7 @@
 import React, { FC, useContext } from 'react';
 import { Divider } from 'antd';
 import './index.css';
+import { SampleTemplate } from "./SampleTemplate"
 import registerComponent from "../../custom-component"
 import { mateComponent } from "../../custom-component/component-list"
 import { IconComponent } from "../../utils/icon-config"
@@ -13,12 +14,18 @@ const AppLayoutLeft: FC = () => {
     const myDragstart = (e: any) => {
         e.dataTransfer.setData("index", e.target.dataset.index);
     }
-    const onClick = () => {
-        let test1 = JSON.parse(localStorage.getItem("test1") ?? "")
-        test1 = test1.map((val: any) => {
+    // const onClick = () => {
+    //     let test1 = JSON.parse(localStorage.getItem("test1") ?? "")
+    //     test1 = test1.map((val: any) => {
+    //         return { ...mateComponent.get(val.componentId), ...val, id: "component" + getID() }
+    //     })
+    //     myAuth.updataComponentData(test1)
+    // }
+    const templateFun = (data: any) => {
+        let newData = data.map((val: any) => {
             return { ...mateComponent.get(val.componentId), ...val, id: "component" + getID() }
         })
-        myAuth.updataComponentData(test1)
+        myAuth.updataComponentData(newData)
     }
 
     return (
@@ -34,7 +41,8 @@ const AppLayoutLeft: FC = () => {
                 )
             })}
             <Divider>模板</Divider>
-            <div onClick={onClick}>test</div>
+            {/* <div onClick={onClick}>test</div> */}
+            <SampleTemplate templateFun={templateFun} />
         </div>
     )
 };
