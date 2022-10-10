@@ -56,7 +56,7 @@ const App: FC = () => {
       <MyContext.Provider value={useAuth()}>
         <Layout>
           <Header className="app-header">
-            <AppHeader />
+            {/* <AppHeader /> */}
           </Header>
           <Layout className="app-layout">
             <Sider className="app-layout-left">
@@ -65,7 +65,7 @@ const App: FC = () => {
             <Content className="app-layout-main">
               <AppLayoutMain />
             </Content>
-            <Sider className="app-layout-right" width="400">
+            <Sider className="app-layout-right" width="450">
               <AppLayoutRight />
             </Sider>
           </Layout>

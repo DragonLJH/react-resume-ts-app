@@ -1,6 +1,7 @@
 import { FC, useEffect, useState, useContext, useRef } from 'react';
 import './index.css';
-import { getStyle, HEADER_Y, SIDER_LEFT_X } from "../../../utils/index";
+// import { getStyle, HEADER_Y, SIDER_LEFT_X } from "../../../utils/index";
+import { getStyle } from "../../../utils/index";
 import commonContext from "../../../commonContext";
 
 interface ControlProps {
@@ -32,12 +33,12 @@ const Control: FC<ControlProps> = (props: ControlProps) => {
 
 
 
-    let guideList = [  //辅助线(fixed定位的辅助线，需要加上头部固定高度和左边固定宽度)
-        { guideName: "guideT", style: { top: insideData.top + HEADER_Y, left: 0 } },
-        { guideName: "guideB", style: { top: insideData.top + insideData.height + HEADER_Y, left: 0 } },
-        { guideName: "guideL", style: { top: 0, left: insideData.left + SIDER_LEFT_X } },
-        { guideName: "guideR", style: { top: 0, left: insideData.left + insideData.width + SIDER_LEFT_X } },
-    ]
+    // let guideList = [  //辅助线(fixed定位的辅助线，需要加上头部固定高度和左边固定宽度)
+    //     { guideName: "guideT", style: { top: insideData.top + HEADER_Y, left: 0 } },
+    //     { guideName: "guideB", style: { top: insideData.top + insideData.height + HEADER_Y, left: 0 } },
+    //     { guideName: "guideL", style: { top: 0, left: insideData.left + SIDER_LEFT_X } },
+    //     { guideName: "guideR", style: { top: 0, left: insideData.left + insideData.width + SIDER_LEFT_X } },
+    // ]
 
 
     const circleWc = 3  //circle宽高6px ，误差3px

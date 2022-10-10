@@ -2,6 +2,7 @@
   "name": "resume-ts-app",
   "version": "0.1.0",
   "private": true,
+  "homepage": "./",
   "dependencies": {
     "@ant-design/colors": "^6.0.0",
     "@testing-library/jest-dom": "^5.16.4",
