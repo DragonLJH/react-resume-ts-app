@@ -1,3 +1,5 @@
+
+import { Col, Row, Space } from 'antd';
 import { red, volcano, gold, yellow, lime, green, cyan, blue, geekblue, purple, magenta, grey } from '@ant-design/colors';
 
 export declare type colorObj = {
@@ -6,8 +8,7 @@ export declare type colorObj = {
     children?: colorObj[];
 }
 
-const white = ['#fff', '#eee', '#ddd', '#ccc', '#bbb', '#aaa', '#999', '#888', '#777', '#666', '#555', '#444', '#333', '#222', '#111', '#000']
-const black = ['#000', '#111', '#222', '#333', '#444', '#555', '#666', '#777', '#888', '#999', '#aaa', '#bbb', '#ccc', '#ddd', '#eee', '#fff']
+const whiteblack = ['#fff', '#eee', '#ddd', '#ccc', '#bbb', '#aaa', '#999', '#888', '#777', '#666', '#555', '#444', '#333', '#222', '#111', '#000']
 
 const colorsMap = new Map()
 colorsMap.set('red', red)
@@ -22,11 +23,10 @@ colorsMap.set('geekblue', geekblue)
 colorsMap.set('purple', purple)
 colorsMap.set('magenta', magenta)
 colorsMap.set('grey', grey)
-colorsMap.set('white', white)
-colorsMap.set('black', black)
+colorsMap.set('whiteblack', whiteblack)
 
 const colors = (): colorObj[] => {
-    return ['white', 'black', 'red', 'volcano', 'gold', 'yellow', 'lime', 'green', 'cyan', 'blue', 'geekblue', 'purple', 'magenta', 'grey'].map((item) => {
+    return ['whiteblack', 'red', 'volcano', 'gold', 'yellow', 'lime', 'green', 'cyan', 'blue', 'geekblue', 'purple', 'magenta', 'grey'].map((item) => {
         let children = colorsMap.get(item)
         children = children.map((val: string) => {
             return { value: val, label: val }
@@ -35,6 +35,25 @@ const colors = (): colorObj[] => {
     })
 }
 
+const ColorPanel = () => {
+    let arr = []
+    for (let i = 0; i <= 4095; i++) {
+        arr.push("#" + i.toString(16).padStart(3, '0'))
+    }
+    return (<Space size={0} wrap style={{ width: "1280px" }}>
+        {arr.map((val) => {
+            return <div key={val} style={{ backgroundColor: val, width: "5px", height: "5px" }} ></div>
+        })}
+    </Space>)
+}
+const colorPanel = () => {
+    let arr = []
+    for (let i = 0; i <= 4095; i++) {
+        arr.push("#" + i.toString(16).padStart(3, '0'))
+    }
+    return arr
+}
 export default {
-    colors: colors()
+    colors: colors(),
+    colorPanel: <ColorPanel />
 }
